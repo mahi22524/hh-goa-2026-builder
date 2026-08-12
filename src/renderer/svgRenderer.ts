@@ -31,15 +31,15 @@ export function renderSvgString({
   const displayName = (name.trim() || 'YOUR NAME').toUpperCase();
   const displayPosition = (position.trim() || 'YOUR POSITION / ROLE').toUpperCase();
 
-  // Circle mask dimensions centered at cx=512, cy=415, r=170 (slightly reduced for better breathing room)
-  const containerSize = 340;
-  const containerX = 342;
-  const containerY = 245;
+  // Circle mask dimensions centered at cx=512, cy=430, r=175 (approx 34% of canvas width)
+  const containerSize = 350;
+  const containerX = 337;
+  const containerY = 255;
 
   const cx = 512;
-  const cy = 415;
+  const cy = 430;
 
-  // Calculate photo positioning inside the 340x340 mask container
+  // Calculate photo positioning inside the 350x350 mask container
   let photoElement = '';
   if (photoUrl && photoWidth > 0 && photoHeight > 0) {
     const bounds = calculateImageBounds(
@@ -83,7 +83,7 @@ export function renderSvgString({
   }
 
   // Define circular mask path
-  const clipPathSvg = `<circle cx="512" cy="415" r="170" />`;
+  const clipPathSvg = `<circle cx="512" cy="430" r="175" />`;
 
   // Determine dynamic builder class and ID
   let builderClass = 'SHIPPING WIZARD';
@@ -102,60 +102,60 @@ export function renderSvgString({
     identityOverlay = `
       <!-- Cyber Defender technical lines & network connections -->
       <g stroke="#00f0ff" stroke-width="1.5" opacity="0.35" fill="none">
-        <circle cx="${cx}" cy="${cy}" r="185" />
-        <circle cx="${cx}" cy="${cy}" r="200" stroke-dasharray="5 15" />
-        <path d="M 342 415 L 290 415 L 260 385" />
-        <path d="M 682 415 L 732 415 L 762 385" />
-        <circle cx="260" cy="385" r="3.5" fill="#00f0ff" />
-        <circle cx="762" cy="385" r="3.5" fill="#00f0ff" />
+        <circle cx="${cx}" cy="${cy}" r="190" />
+        <circle cx="${cx}" cy="${cy}" r="205" stroke-dasharray="5 15" />
+        <path d="M 337 430 L 285 430 L 255 400" />
+        <path d="M 687 430 L 737 430 L 767 400" />
+        <circle cx="255" cy="400" r="3.5" fill="#00f0ff" />
+        <circle cx="767" cy="400" r="3.5" fill="#00f0ff" />
       </g>
     `;
   } else if (themeId === 'AI_EXPLORER') {
     identityOverlay = `
       <!-- AI Explorer concentric tech orbit rings -->
-      <g stroke="#00f0ff" stroke-width="1" opacity="0.3" fill="none">
-        <circle cx="${cx}" cy="${cy}" r="185" stroke-dasharray="1 8" />
-        <ellipse cx="${cx}" cy="${cy}" rx="210" ry="90" transform="rotate(30, ${cx}, ${cy})" />
-        <ellipse cx="${cx}" cy="${cy}" rx="210" ry="90" transform="rotate(-30, ${cx}, ${cy})" />
-        <circle cx="${cx - 180}" cy="${cy - 100}" r="4" fill="#00f0ff" />
-        <circle cx="${cx + 180}" cy="${cy + 100}" r="4" fill="#00f0ff" />
+      <g stroke="#00f0ff" stroke-width="1.2" opacity="0.3" fill="none">
+        <circle cx="${cx}" cy="${cy}" r="190" stroke-dasharray="1 8" />
+        <ellipse cx="${cx}" cy="${cy}" rx="220" ry="100" transform="rotate(30, ${cx}, ${cy})" />
+        <ellipse cx="${cx}" cy="${cy}" rx="220" ry="100" transform="rotate(-30, ${cx}, ${cy})" />
+        <circle cx="${cx - 190}" cy="${cy - 110}" r="4" fill="#00f0ff" />
+        <circle cx="${cx + 190}" cy="${cy + 110}" r="4" fill="#00f0ff" />
       </g>
     `;
   } else if (themeId === 'CODE_BUILDER') {
     identityOverlay = `
       <!-- Code Builder terminal window corner prompts -->
       <g stroke="#38bdf8" stroke-width="2.5" opacity="0.45" fill="none">
-        <path d="M 320 220 L 290 220 L 290 250" />
-        <path d="M 704 220 L 734 220 L 734 250" />
-        <path d="M 290 580 L 290 610 L 320 610" />
-        <path d="M 734 580 L 734 610 L 704 610" />
-        <text x="${cx - 220}" y="${cy - 90}" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="700" opacity="0.5">&lt;</text>
-        <text x="${cx + 205}" y="${cy - 90}" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="700" opacity="0.5">&gt;</text>
+        <path d="M 315 235 L 285 235 L 285 265" />
+        <path d="M 709 235 L 739 235 L 739 265" />
+        <path d="M 285 595 L 285 625 L 315 625" />
+        <path d="M 739 595 L 739 625 L 709 625" />
+        <text x="${cx - 225}" y="${cy - 90}" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="700" opacity="0.5">&lt;</text>
+        <text x="${cx + 210}" y="${cy - 90}" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="700" opacity="0.5">&gt;</text>
       </g>
     `;
   } else if (themeId === 'CREATIVE_BUILDER') {
     identityOverlay = `
       <!-- Creative Builder organic flowing editorial curves -->
-      <g fill="none" stroke="#ff007f" stroke-width="2" opacity="0.3">
-        <path d="M 270 415 Q 350 380, 512 415 T 754 415" />
-        <path d="M 270 435 Q 350 400, 512 435 T 754 435" stroke="#ffde6a" stroke-width="1" />
+      <g fill="none" stroke="#ff007f" stroke-width="2.5" opacity="0.3">
+        <path d="M 265 430 Q 350 395, 512 430 T 759 430" />
+        <path d="M 265 450 Q 350 415, 512 450 T 759 450" stroke="#ffde6a" stroke-width="1.2" />
       </g>
     `;
   } else if (themeId === 'CONTENT_CREATOR') {
     identityOverlay = `
       <!-- Content Creator technical viewfinder markings -->
-      <g stroke="#00f0ff" stroke-width="2" opacity="0.45" fill="none">
-        <rect x="${cx - 185}" y="${cy - 185}" width="370" height="370" rx="10" stroke-dasharray="10 15" />
-        <circle cx="${cx}" cy="${cy}" r="195" />
+      <g stroke="#00f0ff" stroke-width="2.5" opacity="0.45" fill="none">
+        <rect x="${cx - 190}" y="${cy - 190}" width="380" height="380" rx="10" stroke-dasharray="10 15" />
+        <circle cx="${cx}" cy="${cy}" r="200" />
       </g>
     `;
   } else if (themeId === 'NIGHT_SHIPPER') {
     identityOverlay = `
       <!-- Night Shipper constellation mappings -->
-      <g stroke="#38bdf8" stroke-width="1" opacity="0.3" fill="none">
-        <circle cx="210" cy="180" r="1.5" fill="#38bdf8" />
-        <circle cx="270" cy="150" r="1" fill="#ffde6a" />
-        <circle cx="800" cy="190" r="2" fill="#38bdf8" />
+      <g stroke="#38bdf8" stroke-width="1.2" opacity="0.3" fill="none">
+        <circle cx="210" cy="180" r="2" fill="#38bdf8" />
+        <circle cx="270" cy="150" r="1.5" fill="#ffde6a" />
+        <circle cx="800" cy="190" r="2.5" fill="#38bdf8" />
       </g>
     `;
   }
@@ -166,7 +166,7 @@ export function renderSvgString({
     <!-- Fonts inclusion -->
     <style>
       ${embedFontsCss || `
-        @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap');
       `}
       
       svg {
@@ -193,18 +193,26 @@ export function renderSvgString({
     <pattern id="grid-dots" width="30" height="30" patternUnits="userSpaceOnUse">
       <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.1" />
     </pattern>
+
+    <!-- Drop Shadow Filter -->
+    <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
+      <feDropShadow dx="2" dy="5" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
+    </filter>
   </defs>
 
   <!-- 1. BACKDROP TROPICAL GRADIENT -->
   <rect width="1024" height="1024" fill="url(#sky-ocean-grad)" />
   <rect width="1024" height="1024" fill="url(#grid-dots)" />
 
+  <!-- Radial sun glow to add atmospheric lighting -->
+  <circle cx="512" cy="415" r="280" fill="#ffffff" opacity="0.12" />
+
   <!-- 2. ENVIRONMENT SCENERY ILLUSTRATED -->
   <!-- Distant islands -->
   <path d="M 0 350 Q 150 330, 300 350 T 600 350 T 900 350 L 1024 350 L 1024 360 L 0 360 Z" fill="#013c58" opacity="0.8" />
   <path d="M 120 350 Q 250 320, 380 350 T 700 350 L 1024 350 L 1024 355 L 0 355 Z" fill="#002b40" opacity="0.9" />
 
-  <!-- Exactly 2 soar birds on left (safe distance from portrait) -->
+  <!-- Exactly 2 soar birds on left (high in sky to prevent overlapping with portrait) -->
   <path d="M 230 110 Q 238 95, 246 110 Q 254 95, 262 110" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
   <path d="M 290 140 Q 298 125, 306 140 Q 314 125, 322 140" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8" />
 
@@ -218,18 +226,18 @@ export function renderSvgString({
     <path d="M 35 10 L 45 13 L 35 16 Z" fill="#ffde6a" />
   </g>
 
-  <!-- Right-side coast beach hills & palms -->
+  <!-- Right-side coast beach hills & palms (Naturally detailed vector palms) -->
   <path d="M 750 350 Q 880 310, 1024 220 L 1024 450 Q 880 430, 750 350 Z" fill="#0c4a6e" />
-  <!-- Palm 1 (Well aligned to prevent distortion) -->
+  <!-- Palm 1 (aligned and structured, not distorted) -->
   <g transform="translate(850, 100)">
     <path d="M 174 480 Q 80 280, 120 70" fill="none" stroke="#451a03" stroke-width="12" stroke-linecap="round" />
-    <g stroke="#064e3b" stroke-width="4.5" stroke-linecap="round" fill="none">
+    <g stroke="#064e3b" stroke-width="5" stroke-linecap="round" fill="none">
       <path d="M 120 70 Q 70 80, 30 120" />
       <path d="M 120 70 Q 80 20, 50 -20" />
       <path d="M 120 70 Q 150 10, 200 0" />
       <path d="M 120 70 Q 170 60, 220 80" />
     </g>
-    <g stroke="#0f766e" stroke-width="2.5" stroke-linecap="round" fill="none">
+    <g stroke="#0f766e" stroke-width="3" stroke-linecap="round" fill="none">
       <path d="M 120 70 Q 75 60, 45 90" />
       <path d="M 120 70 Q 95 30, 75 0" />
       <path d="M 120 70 Q 140 30, 170 20" />
@@ -239,7 +247,7 @@ export function renderSvgString({
   <!-- Left-side beach palm -->
   <g transform="translate(-10, 120)">
     <path d="M 40 450 Q 70 250, 90 90" fill="none" stroke="#451a03" stroke-width="10" stroke-linecap="round" />
-    <g stroke="#064e3b" stroke-width="4" stroke-linecap="round" fill="none">
+    <g stroke="#064e3b" stroke-width="4.5" stroke-linecap="round" fill="none">
       <path d="M 90 90 Q 50 100, 20 130" />
       <path d="M 90 90 Q 60 70, 40 40" />
       <path d="M 90 90 Q 110 60, 140 50" />
@@ -302,12 +310,17 @@ export function renderSvgString({
     <text x="0" y="78" fill="#ffde6a" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">2026</text>
   </g>
 
+  <!-- Title Section with script Overlay -->
   <g transform="translate(512, 135)">
-    <text x="0" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="46" text-anchor="middle" letter-spacing="-1px">HACKER <tspan fill="#ffde6a" font-family="'Fraunces', serif" font-style="italic">Goa</tspan> HOUSE</text>
+    <!-- HACKER HOUSE layout with cursive Goa overlay -->
+    <text x="-165" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="46" text-anchor="start" letter-spacing="-1px">HACKER</text>
+    <text x="165" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="46" text-anchor="end" letter-spacing="-1px">HOUSE</text>
+    <text x="0" y="5" fill="#ffde6a" font-family="'Fraunces', serif" font-style="italic" font-weight="900" font-size="52" text-anchor="middle" filter="url(#shadow)">Goa</text>
+    
     <!-- Under Title Year Pill -->
-    <rect x="-85" y="10" width="170" height="28" fill="#0f2b48" rx="14" stroke="#38bdf8" stroke-width="1.5" />
-    <text x="0" y="30" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="16" text-anchor="middle" letter-spacing="3px">2026</text>
-    <text x="0" y="56" fill="#bae6fd" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="10" text-anchor="middle" letter-spacing="4px">BUILD • INNOVATE • IMPACT</text>
+    <rect x="-85" y="15" width="170" height="28" fill="#0f2b48" rx="14" stroke="#38bdf8" stroke-width="1.5" />
+    <text x="0" y="35" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="16" text-anchor="middle" letter-spacing="3px">2026</text>
+    <text x="0" y="62" fill="#bae6fd" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="10" text-anchor="middle" letter-spacing="4px">BUILD • INNOVATE • IMPACT</text>
   </g>
 
   <!-- Left/Right margins metadata -->
@@ -323,9 +336,9 @@ export function renderSvgString({
 
   <!-- 4. PHOTO WORKSPACE LAYOUT -->
   <!-- Outer white frame of circular photo (Breathing space optimized) -->
-  <circle cx="${cx}" cy="${cy}" r="176" fill="none" stroke="#ffffff" stroke-width="4.5" />
+  <circle cx="${cx}" cy="${cy}" r="181" fill="none" stroke="#ffffff" stroke-width="4.5" />
   <!-- HUD circular ticks inside -->
-  <circle cx="${cx}" cy="${cy}" r="170" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 6" />
+  <circle cx="${cx}" cy="${cy}" r="175" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 6" />
 
   <!-- DYNAMIC USER PHOTO -->
   ${photoElement}
@@ -398,9 +411,12 @@ export function renderSvgString({
     <text x="212" y="22" fill="#0f2b48" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="14" text-anchor="middle" letter-spacing="0.5px">⚡ ${displayPosition} ⚡</text>
   </g>
 
-  <!-- 6. THREE-COLUMN BOTTOM META INFORMATION SYSTEM -->
+  <!-- 6. THREE-COLUMN BOTTOM META INFORMATION SYSTEM IN A PROFESSIONAL PANEL CARD -->
+  <!-- Rounded Glassmorphic container card -->
+  <rect x="60" y="745" width="904" height="200" fill="#061826" fill-opacity="0.8" rx="16" stroke="#1e3d59" stroke-width="2" filter="url(#shadow)" />
+
   <g transform="translate(0, 755)">
-    <!-- Vertical Column Dividers -->
+    <!-- Vertical Column Dividers inside card -->
     <line x1="330" y1="10" x2="330" y2="180" stroke="#38bdf8" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 4" />
     <line x1="650" y1="10" x2="650" y2="180" stroke="#38bdf8" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 4" />
 
@@ -409,7 +425,7 @@ export function renderSvgString({
       <text x="110" y="20" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12" text-anchor="middle" letter-spacing="1.5px">✦ BUILDER CLASS ✦</text>
       <text x="110" y="44" fill="#ffffff" font-family="'Fraunces', serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="-0.5px">${builderClass}</text>
       
-      <!-- High-Fidelity QR Code target link to hacker house site (scannable) -->
+      <!-- High-Fidelity scannable QR Code target link -->
       <g transform="translate(50, 60)" fill="#0f2b48">
         <rect x="0" y="0" width="120" height="120" fill="#ffffff" rx="8" />
         
