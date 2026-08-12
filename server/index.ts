@@ -26,7 +26,7 @@ if (!fs.existsSync(generatedDir)) {
 app.use('/uploads', express.static(generatedDir));
 
 // POST /api/upload
-app.post('/api/upload', (req: express.Request, res: express.Response) => {
+app.post('/api/upload', async (req: express.Request, res: express.Response) => {
   try {
     const { image } = req.body;
 
@@ -50,17 +50,42 @@ app.post('/api/upload', (req: express.Request, res: express.Response) => {
 
     // Generate safe filename
     const filename = `hh-goa-frame-${Date.now()}-${Math.random().toString(36).substring(2, 8)}.png`;
-    const filePath = path.join(generatedDir, filename);
 
-    // Save file
-    fs.writeFileSync(filePath, buffer);
+    const project = process.env.SUPABASE_PROJECT_ID;
+    const bucket = process.env.SUPABASE_BUCKET;
+    const key = process.env.SUPABASE_SERVICE_ROLE_KEY;
 
-    // Determine public URL
-    const host = req.get('host');
-    const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-    const publicUrl = `${protocol}://${host}/uploads/${filename}`;
+    if (project && bucket && key) {
+      // Use Supabase Storage
+      const uploadUrl = `https://${project}.supabase.co/storage/v1/object/${bucket}/${filename}`;
+      const uploadResponse = await fetch(uploadUrl, {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${key}`,
+          'Content-Type': 'image/png',
+        },
+        body: buffer,
+      });
 
-    return res.status(200).json({ url: publicUrl });
+      if (!uploadResponse.ok) {
+        const errorText = await uploadResponse.text();
+        console.error('Supabase upload error:', errorText);
+        return res.status(500).json({ error: 'Failed to upload generated frame to sharing storage.' });
+      }
+
+      const publicUrl = `https://${project}.supabase.co/storage/v1/object/public/${bucket}/${filename}`;
+      return res.status(200).json({ url: publicUrl });
+    } else {
+      // Fallback: Local filesystem (for local development)
+      const filePath = path.join(generatedDir, filename);
+      fs.writeFileSync(filePath, buffer);
+
+      const host = req.get('host');
+      const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
+      const publicUrl = `${protocol}://${host}/uploads/${filename}`;
+
+      return res.status(200).json({ url: publicUrl });
+    }
   } catch (error) {
     console.error('Upload error:', error);
     // Security: Do not expose internal server paths/stack traces
@@ -83,16 +108,24 @@ app.get('/share', (req: express.Request, res: express.Response) => {
       return res.status(400).send('Invalid image parameter');
     }
 
-    // Verify file exists
-    const filePath = path.join(generatedDir, filename);
-    if (!fs.existsSync(filePath)) {
-      return res.status(404).send('Shared image not found');
-    }
+    const project = process.env.SUPABASE_PROJECT_ID;
+    const bucket = process.env.SUPABASE_BUCKET;
 
-    // Determine public URL for OG tags
+    let imageUrl = '';
     const host = req.get('host');
     const protocol = req.protocol === 'https' || req.headers['x-forwarded-proto'] === 'https' ? 'https' : 'http';
-    const imageUrl = `${protocol}://${host}/uploads/${filename}`;
+
+    if (project && bucket) {
+      imageUrl = `https://${project}.supabase.co/storage/v1/object/public/${bucket}/${filename}`;
+    } else {
+      // Verify file exists locally (Fallback mode)
+      const filePath = path.join(generatedDir, filename);
+      if (!fs.existsSync(filePath)) {
+        return res.status(404).send('Shared image not found');
+      }
+      imageUrl = `${protocol}://${host}/uploads/${filename}`;
+    }
+
     const redirectUrl = `${protocol}://${host}`;
 
     // Return HTML with OG Metadata and a beautiful preview interface
@@ -223,11 +256,11 @@ app.get('/share', (req: express.Request, res: express.Response) => {
     <h1>HACKER HOUSE GOA 2026</h1>
     <p>Official Builder Frame Generated Profile Frame</p>
     <div class="image-preview">
-      <img src="/uploads/${filename}" alt="Hacker House Goa 2026 Builder Frame">
+      <img src="${imageUrl}" alt="Hacker House Goa 2026 Builder Frame">
     </div>
     <div class="actions">
       <a href="${redirectUrl}" class="btn btn-primary">Create Your Frame</a>
-      <a href="/uploads/${filename}" download="${filename}" class="btn btn-secondary">Download Image</a>
+      <a href="${imageUrl}" download="${filename}" class="btn btn-secondary">Download Image</a>
     </div>
   </div>
 </body>
