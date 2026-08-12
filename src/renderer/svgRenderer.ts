@@ -31,12 +31,15 @@ export function renderSvgString({
   const displayName = (name.trim() || 'YOUR NAME').toUpperCase();
   const displayPosition = (position.trim() || 'YOUR POSITION / ROLE').toUpperCase();
 
-  // Mask dimensions
-  const containerSize = 760;
-  const containerX = 132;
-  const containerY = 80;
+  // Circle mask dimensions centered at cx=512, cy=435, r=210
+  const containerSize = 420;
+  const containerX = 302;
+  const containerY = 225;
 
-  // Calculate photo positioning inside the 760x760 mask container
+  const cx = 512;
+  const cy = 435;
+
+  // Calculate photo positioning inside the 420x420 mask container
   let photoElement = '';
   if (photoUrl && photoWidth > 0 && photoHeight > 0) {
     const bounds = calculateImageBounds(
@@ -68,397 +71,86 @@ export function renderSvgString({
     `;
   } else {
     // Placeholder if no photo uploaded
-    const centerX = containerX + containerSize / 2;
-    const centerY = containerY + containerSize / 2;
+    const placeholderX = containerX;
+    const placeholderY = containerY;
     photoElement = `
       <g clip-path="url(#photo-clip)">
-        <rect x="${containerX}" y="${containerY}" width="${containerSize}" height="${containerSize}" fill="${colors.muted}" />
-        <text x="${centerX}" y="${centerY - 10}" fill="${colors.text}" opacity="0.3" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="28" text-anchor="middle">NO PHOTO UPLOADED</text>
-        <text x="${centerX}" y="${centerY + 25}" fill="${colors.accent}" opacity="0.5" font-family="'JetBrains Mono', monospace" font-size="14" text-anchor="middle">[AWAITING_INPUT]</text>
+        <rect x="${placeholderX}" y="${placeholderY}" width="${containerSize}" height="${containerSize}" fill="#0f2b48" />
+        <text x="${cx}" y="${cy - 10}" fill="#ffffff" opacity="0.3" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="20" text-anchor="middle">NO PHOTO</text>
+        <text x="${cx}" y="${cy + 15}" fill="#ffde6a" opacity="0.5" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="middle">[AWAITING_UPLOAD]</text>
       </g>
     `;
   }
 
   // Define mask paths
-  const clipPathSvg = shape === 'CIRCLE'
-    ? `<circle cx="512" cy="460" r="380" />`
-    : `<rect x="${containerX}" y="${containerY}" width="${containerSize}" height="${containerSize}" rx="48" ry="48" />`;
+  const clipPathSvg = `<circle cx="512" cy="435" r="210" />`;
 
-  // Dynamic Theme-specific background and foreground decorations
-  let backgroundDecorations = '';
-  let foregroundDecorations = '';
-  let themeTitleSection = '';
+  // Determine dynamic builder class and ID
+  let builderClass = 'SHIPPING WIZARD';
+  if (theme.id === 'CYBER_DEFENDER') builderClass = 'CYBER SENTINEL';
+  else if (theme.id === 'AI_EXPLORER') builderClass = 'NEURAL PIONEER';
+  else if (theme.id === 'CODE_BUILDER') builderClass = 'SHIPPING WIZARD';
+  else if (theme.id === 'CREATIVE_BUILDER') builderClass = 'PIXEL ALCHEMIST';
+  else if (theme.id === 'CONTENT_CREATOR') builderClass = 'NARRATIVE ARCHITECT';
+  else if (theme.id === 'NIGHT_SHIPPER') builderClass = 'MIDNIGHT CAPTAIN';
 
-  const cx = 512;
-  const cy = 460;
+  const builderId = `#HH-GOA-${(name.trim() ? name.length * 377 + position.length * 13 : 7757) % 10000}`;
 
-  switch (theme.id) {
-    case 'CYBER_DEFENDER':
-      // Technical cybersecurity layout
-      backgroundDecorations = `
-        <!-- Cyber grid background -->
-        <defs>
-          <pattern id="cyber-grid" width="40" height="40" patternUnits="userSpaceOnUse">
-            <path d="M 40 0 L 0 0 0 40" fill="none" stroke="${colors.muted}" stroke-width="0.7" opacity="0.4" />
-          </pattern>
-        </defs>
-        <rect width="1024" height="1024" fill="url(#cyber-grid)" />
-        
-        <!-- Circuit board traces behind photo -->
-        <g stroke="${colors.accent}" stroke-width="1.5" fill="none" opacity="0.2">
-          <path d="M 150 200 L 300 200 L 350 250 L 350 350" />
-          <circle cx="150" cy="200" r="3.5" fill="${colors.accent}" />
-          
-          <path d="M 874 200 L 724 200 L 674 250 L 674 350" />
-          <circle cx="874" cy="200" r="3.5" fill="${colors.accent}" />
-          
-          <path d="M 150 720 L 250 720 L 300 670 L 300 570" />
-          <circle cx="150" cy="720" r="3.5" fill="${colors.accent}" />
-          
-          <path d="M 874 720 L 774 720 L 724 670 L 724 570" />
-          <circle cx="874" cy="720" r="3.5" fill="${colors.accent}" />
-        </g>
-        
-        <!-- Large asymmetric technical circles behind photo -->
-        <circle cx="${cx}" cy="${cy}" r="410" fill="none" stroke="${colors.muted}" stroke-width="1.5" stroke-dasharray="10 15" opacity="0.3" />
-        <circle cx="${cx}" cy="${cy}" r="430" fill="none" stroke="${colors.accent}" stroke-width="1" opacity="0.15" />
-        <circle cx="${cx}" cy="${cy}" r="450" fill="none" stroke="${colors.accent}" stroke-width="1.5" stroke-dasharray="5 20" opacity="0.2" />
-
-        <!-- Shield / security HUD outline at top behind photo -->
-        <path d="M 512 180 Q 562 180, 562 230 Q 562 310, 512 360 Q 462 310, 462 230 Q 462 180, 512 180 Z" fill="none" stroke="${colors.accent}" stroke-width="2" opacity="0.1" />
-      `;
-
-      foregroundDecorations = `
-        <!-- Safe scanning box around the photo -->
-        ${shape === 'CIRCLE' 
-          ? `<circle cx="${cx}" cy="${cy}" r="382" fill="none" stroke="${colors.accent}" stroke-width="2" />
-             <circle cx="${cx}" cy="${cy}" r="390" fill="none" stroke="${colors.text}" stroke-width="1" opacity="0.3" stroke-dasharray="5 5" />`
-          : `<rect x="${containerX - 2}" y="${containerY - 2}" width="${containerSize + 4}" height="${containerSize + 4}" rx="50" ry="50" fill="none" stroke="${colors.accent}" stroke-width="2" />
-             <rect x="${containerX - 10}" y="${containerY - 10}" width="${containerSize + 20}" height="${containerSize + 20}" rx="58" ry="58" fill="none" stroke="${colors.text}" stroke-width="1" opacity="0.3" stroke-dasharray="8 8" />`
-        }
-
-        <!-- Technical Corner crosshairs for rectangular, or quadrant ticks for circular -->
-        ${shape === 'CIRCLE'
-          ? `<path d="M ${cx} ${cy - 395} L ${cx} ${cy - 375} M ${cx} ${cy + 375} L ${cx} ${cy + 395} M ${cx - 395} ${cy} L ${cx - 375} ${cy} M ${cx + 375} ${cy} L ${cx + 395} ${cy}" stroke="${colors.accent}" stroke-width="2" />`
-          : `<path d="M ${containerX - 20} ${containerY + 30} L ${containerX - 20} ${containerY - 20} L ${containerX + 30} ${containerY - 20} 
-                     M ${containerX + containerSize + 20} ${containerY + 30} L ${containerX + containerSize + 20} ${containerY - 20} L ${containerX + containerSize - 30} ${containerY - 20}
-                     M ${containerX - 20} ${containerY + containerSize - 30} L ${containerX - 20} ${containerY + containerSize + 20} L ${containerX + 30} ${containerY + containerSize + 20}
-                     M ${containerX + containerSize + 20} ${containerY + containerSize - 30} L ${containerX + containerSize + 20} ${containerY + containerSize + 20} L ${containerX + containerSize - 30} ${containerY + containerSize + 20}" 
-                 fill="none" stroke="${colors.accent}" stroke-width="2.5" />`
-        }
-
-        <!-- Tech badges overlay -->
-        <g transform="translate(150, 100)">
-          <rect x="0" y="0" width="180" height="28" fill="${colors.bg}" stroke="${colors.accent}" stroke-width="1" rx="4" />
-          <text x="10" y="18" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">[SECURE_ACCESS_GRANTED]</text>
-        </g>
-        <g transform="translate(700, 100)">
-          <text x="170" y="18" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="end" opacity="0.7">AUTH_LEVEL: BUILDER</text>
-          <text x="170" y="32" fill="${colors.coral}" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="end" font-weight="700">SYS_SEC: 99.82%</text>
-        </g>
-      `;
-
-      themeTitleSection = `
-        <!-- Main title: Editorial typography with Fraunces & Space Grotesk -->
-        <text x="512" y="875" fill="${colors.text}" font-family="'Fraunces', serif" font-weight="900" font-size="64" text-anchor="middle" letter-spacing="-1.5px">CYBER DEFENDER</text>
-        <text x="512" y="918" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="26" text-anchor="middle" letter-spacing="1px">${displayName}</text>
-        <text x="512" y="948" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="13" text-anchor="middle" letter-spacing="1px">${displayPosition}</text>
-        
-        <!-- Bottom metadata -->
-        <text x="80" y="980" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-size="12" opacity="0.5">HACKER HOUSE GOA 2026 // CYBERSECURITY</text>
-        <text x="944" y="980" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="end" opacity="0.5">GOA, INDIA // 28–31 OCT 2026</text>
-      `;
-      break;
-
-    case 'AI_EXPLORER':
-      // Orbital/circular geometry
-      backgroundDecorations = `
-        <defs>
-          <radialGradient id="ai-glow" cx="50%" cy="50%" r="50%">
-            <stop offset="0%" stop-color="${colors.muted}" stop-opacity="0.6" />
-            <stop offset="100%" stop-color="${colors.bg}" stop-opacity="0" />
-          </radialGradient>
-        </defs>
-        <circle cx="${cx}" cy="${cy}" r="500" fill="url(#ai-glow)" />
-        
-        <!-- Large concentric orbital paths -->
-        <circle cx="${cx}" cy="${cy}" r="400" fill="none" stroke="${colors.accent}" stroke-width="1" opacity="0.25" stroke-dasharray="4 8" />
-        <circle cx="${cx}" cy="${cy}" r="425" fill="none" stroke="${colors.text}" stroke-width="0.8" opacity="0.15" />
-        <circle cx="${cx}" cy="${cy}" r="450" fill="none" stroke="${colors.accent}" stroke-width="1.5" opacity="0.2" stroke-dasharray="40 10 5 10" />
-        
-        <!-- Faint dot grid -->
-        <defs>
-          <pattern id="dot-grid" width="30" height="30" patternUnits="userSpaceOnUse">
-            <circle cx="2" cy="2" r="1.2" fill="${colors.muted}" opacity="0.5" />
-          </pattern>
-        </defs>
-        <rect width="1024" height="1024" fill="url(#dot-grid)" />
-      `;
-
-      foregroundDecorations = `
-        <!-- Circular tick rings -->
-        ${shape === 'CIRCLE'
-          ? `<circle cx="${cx}" cy="${cy}" r="384" fill="none" stroke="${colors.accent}" stroke-width="2" />
-             <circle cx="${cx}" cy="${cy}" r="376" fill="none" stroke="${colors.text}" stroke-width="0.5" opacity="0.4" />`
-          : `<rect x="${containerX - 2}" y="${containerY - 2}" width="${containerSize + 4}" height="${containerSize + 4}" rx="50" ry="50" fill="none" stroke="${colors.accent}" stroke-width="2" />
-             <rect x="${containerX + 6}" y="${containerY + 6}" width="${containerSize - 12}" height="${containerSize - 12}" rx="42" ry="42" fill="none" stroke="${colors.text}" stroke-width="0.5" opacity="0.4" />`
-        }
-
-        <!-- Coordinate marks & AI stats -->
-        <g transform="translate(140, 110)">
-          <text x="0" y="0" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">LATENT_SPACE_EXPLORER</text>
-          <text x="0" y="16" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="10" opacity="0.5">MODEL: PFP_GEN_V2</text>
-        </g>
-        <g transform="translate(710, 110)">
-          <text x="170" y="0" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="end" opacity="0.5">WEIGHTS: FLOAT16</text>
-          <text x="170" y="16" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700" text-anchor="end">TEMP: 0.70 [OPTIMAL]</text>
-        </g>
-
-        <!-- Technical crosshairs -->
-        <line x1="${cx}" y1="${cy - 395}" x2="${cx}" y2="${cy - 365}" stroke="${colors.accent}" stroke-width="1.5" />
-        <line x1="${cx}" y1="${cy + 365}" x2="${cx}" y2="${cy + 395}" stroke="${colors.accent}" stroke-width="1.5" />
-        <line x1="${cx - 395}" y1="${cy}" x2="${cx - 365}" y2="${cy}" stroke="${colors.accent}" stroke-width="1.5" />
-        <line x1="${cx + 365}" y1="${cy}" x2="${cx + 395}" y2="${cy}" stroke="${colors.accent}" stroke-width="1.5" />
-      `;
-
-      themeTitleSection = `
-        <text x="512" y="875" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="64" text-anchor="middle" letter-spacing="-1px">AI EXPLORER</text>
-        <text x="512" y="918" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="26" text-anchor="middle" letter-spacing="1px">${displayName}</text>
-        <text x="512" y="948" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="13" text-anchor="middle" letter-spacing="1px">${displayPosition}</text>
-        
-        <text x="80" y="980" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-size="12" opacity="0.5">HACKER HOUSE GOA 2026 // AI / ML</text>
-        <text x="944" y="980" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="end" opacity="0.5">GOA, INDIA // 28–31 OCT 2026 // 247</text>
-      `;
-      break;
-
-    case 'CODE_BUILDER':
-      // Structured developer code/editorial theme
-      backgroundDecorations = `
-        <!-- Tech binary/matrix code lines -->
-        <g opacity="0.15" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11">
-          <text x="60" y="160">&lt;script setup&gt;</text>
-          <text x="60" y="185">import { Builder } from 'goa-house';</text>
-          <text x="60" y="210">const location = 'Goa, India';</text>
-          <text x="60" y="235">const dates = '28–31 Oct 2026';</text>
-          <text x="60" y="260">export default async function ship() {</text>
-          <text x="80" y="285">const pfp = await generate({ theme: 'CODE' });</text>
-          <text x="80" y="310">return pfp.save();</text>
-          <text x="60" y="335">}</text>
-
-          <text x="964" y="160" text-anchor="end">package.json</text>
-          <text x="964" y="185" text-anchor="end">"dependencies": {</text>
-          <text x="964" y="210" text-anchor="end">"vite": "^5.4.0",</text>
-          <text x="964" y="235" text-anchor="end">"react": "^18.3.1",</text>
-          <text x="964" y="260" text-anchor="end">"typescript": "^5.5.4"</text>
-          <text x="964" y="285" text-anchor="end">}</text>
-        </g>
-        
-        <!-- Large faint curly braces behind photo -->
-        <text x="180" y="520" fill="${colors.muted}" font-family="'Space Grotesk', sans-serif" font-weight="300" font-size="320" text-anchor="middle" opacity="0.25">{</text>
-        <text x="844" y="520" fill="${colors.muted}" font-family="'Space Grotesk', sans-serif" font-weight="300" font-size="320" text-anchor="middle" opacity="0.25">}</text>
-      `;
-
-      foregroundDecorations = `
-        <!-- Chrome border for IDE window look -->
-        ${shape === 'CIRCLE'
-          ? `<circle cx="${cx}" cy="${cy}" r="384" fill="none" stroke="${colors.accent}" stroke-width="2" />
-             <circle cx="${cx}" cy="${cy}" r="390" fill="none" stroke="${colors.muted}" stroke-width="1.5" />`
-          : `<rect x="${containerX - 1}" y="${containerY - 1}" width="${containerSize + 2}" height="${containerSize + 2}" rx="32" ry="32" fill="none" stroke="${colors.accent}" stroke-width="2.5" />
-             <!-- Code terminal window top bar -->
-             <path d="M ${containerX} ${containerY + 36} L ${containerX + containerSize} ${containerY + 36}" stroke="${colors.accent}" stroke-width="1.5" />
-             <circle cx="${containerX + 18}" cy="${containerY + 18}" r="5" fill="#f2725c" />
-             <circle cx="${containerX + 32}" cy="${containerY + 18}" r="5" fill="${colors.accent}" />
-             <circle cx="${containerX + 46}" cy="${containerY + 18}" r="5" fill="#2d4d38" />
-             <text x="${containerX + 70}" y="${containerY + 22}" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="10" opacity="0.6">builder.tsx</text>`
-        }
-
-        <!-- Status Tag bottom left overlap -->
-        <g transform="translate(150, 780)">
-          <rect x="0" y="0" width="130" height="26" fill="${colors.bg}" stroke="${colors.accent}" stroke-width="1" rx="4" />
-          <text x="10" y="17" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="10" font-weight="700">STATUS: COMPILING</text>
-        </g>
-        
-        <!-- Terminal command overlay -->
-        <g transform="translate(150, 70)">
-          <text x="10" y="32" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="12" font-weight="700">&gt; npm run ship</text>
-        </g>
-      `;
-
-      themeTitleSection = `
-        <text x="512" y="875" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="64" text-anchor="middle" letter-spacing="-2px">CODE BUILDER</text>
-        <text x="512" y="918" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="20" font-weight="700" text-anchor="middle">const builder = "${displayName}";</text>
-        <text x="512" y="948" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="13" font-weight="700" text-anchor="middle">const role = "${displayPosition}";</text>
- 
-        <!-- Bottom details -->
-        <text x="80" y="980" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-size="12" opacity="0.5">HACKER HOUSE GOA 2026 // FRONTEND</text>
-        <text x="944" y="980" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="end" font-weight="700">28–31 OCT 2026 // 247</text>
-      `;
-      break;
-
-    case 'CREATIVE_BUILDER':
-      // Asymmetric bold graphics and sophisticated coral/cream accents
-      backgroundDecorations = `
-        <!-- Abstract flowing curves for Creative visual style -->
-        <path d="M 0 350 C 300 200, 700 500, 1024 350" fill="none" stroke="${colors.accent}" stroke-width="3" opacity="0.2" />
-        <path d="M 0 400 C 300 250, 700 550, 1024 400" fill="none" stroke="${colors.muted}" stroke-width="1.5" opacity="0.15" />
-
-        <!-- Bold background shape overlapping slightly -->
-        <path d="M 50 460 A 462 462 0 0 1 974 460" fill="none" stroke="${colors.muted}" stroke-width="8" opacity="0.2" />
-        <circle cx="${cx}" cy="${cy}" r="415" fill="none" stroke="${colors.accent}" stroke-width="1.5" opacity="0.15" />
-        
-        <!-- Large accent label -->
-        <text x="80" y="240" fill="${colors.muted}" font-family="'Fraunces', serif" font-style="italic" font-weight="900" font-size="120" opacity="0.18">Design</text>
-      `;
-
-      foregroundDecorations = `
-        <!-- Asymmetric offset borders -->
-        ${shape === 'CIRCLE'
-          ? `<circle cx="${cx - 6}" cy="${cy - 6}" r="380" fill="none" stroke="${colors.accent}" stroke-width="2" />
-             <circle cx="${cx}" cy="${cy}" r="380" fill="none" stroke="${colors.text}" stroke-width="2" />`
-          : `<rect x="${containerX - 6}" y="${containerY - 6}" width="${containerSize}" height="${containerSize}" rx="48" ry="48" fill="none" stroke="${colors.accent}" stroke-width="2.5" />
-             <rect x="${containerX}" y="${containerY}" width="${containerSize}" height="${containerSize}" rx="48" ry="48" fill="none" stroke="${colors.text}" stroke-width="2" />`
-        }
-
-        <!-- Design details -->
-        <g transform="translate(140, 110)">
-          <text x="0" y="0" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="13">GRID_SYSTEM: ACTIVE</text>
-          <text x="0" y="16" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="11">CMYK: 0.15.82.0</text>
-        </g>
-        <g transform="translate(710, 110)">
-          <text x="170" y="0" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="13" text-anchor="end">ASPECT: 1:1 SQUARE</text>
-          <text x="170" y="16" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="end">RESOLUTION: 1024DPI</text>
-        </g>
-
-        <!-- Dynamic tick marks -->
-        <line x1="${containerX}" y1="${containerY + 50}" x2="${containerX + 30}" y2="${containerY + 50}" stroke="${colors.accent}" stroke-width="1.5" />
-        <line x1="${containerX + 50}" y1="${containerY}" x2="${containerX + 50}" y2="${containerY + 30}" stroke="${colors.accent}" stroke-width="1.5" />
-      `;
-
-      themeTitleSection = `
-        <text x="512" y="875" fill="${colors.text}" font-family="'Fraunces', serif" font-weight="900" font-size="64" text-anchor="middle" letter-spacing="-1.5px">CREATIVE BUILDER</text>
-        <text x="512" y="918" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="26" text-anchor="middle" letter-spacing="1px">${displayName}</text>
-        <text x="512" y="948" fill="${colors.accent}" font-family="'Fraunces', serif" font-weight="700" font-style="italic" font-size="14" text-anchor="middle" letter-spacing="1px">${displayPosition}</text>
-
-        <text x="80" y="980" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" opacity="0.5">HACKER HOUSE GOA 2026 // DESIGN</text>
-        <text x="944" y="980" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="end" opacity="0.5">GOA, INDIA // 28–31 OCT 2026</text>
-      `;
-      break;
-
-    case 'CONTENT_CREATOR':
-      // Publishing/media layout
-      backgroundDecorations = `
-        <defs>
-          <pattern id="media-lines" width="1024" height="20" patternUnits="userSpaceOnUse">
-            <line x1="0" y1="0" x2="1024" y2="0" stroke="${colors.muted}" stroke-width="0.8" opacity="0.2" />
-          </pattern>
-        </defs>
-        <rect width="1024" height="1024" fill="url(#media-lines)" />
-        
-        <!-- Outer boundaries -->
-        <rect x="40" y="40" width="944" height="944" fill="none" stroke="${colors.muted}" stroke-width="1" opacity="0.3" />
-      `;
-
-      foregroundDecorations = `
-        <!-- Camera viewfinder corners overlay -->
-        <g stroke="${colors.accent}" stroke-width="2.5" fill="none" opacity="0.8">
-          <!-- Top Left -->
-          <path d="M ${containerX + 20} ${containerY + 60} L ${containerX + 20} ${containerY + 20} L ${containerX + 60} ${containerY + 20}" />
-          <!-- Top Right -->
-          <path d="M ${containerX + containerSize - 60} ${containerY + 20} L ${containerX + containerSize - 20} ${containerY + 20} L ${containerX + containerSize - 20} ${containerY + 60}" />
-          <!-- Bottom Left -->
-          <path d="M ${containerX + 20} ${containerY + containerSize - 60} L ${containerX + 20} ${containerY + containerSize - 20} L ${containerX + 60} ${containerY + containerSize - 20}" />
-          <!-- Bottom Right -->
-          <path d="M ${containerX + containerSize - 60} ${containerY + containerSize - 20} L ${containerX + containerSize - 20} ${containerY + containerSize - 20} L ${containerX + containerSize - 20} ${containerY + containerSize - 60}" />
-        </g>
-        
-        <!-- Viewfinder center bracket -->
-        <g stroke="${colors.text}" stroke-width="1" opacity="0.4" fill="none">
-          <line x1="${cx - 15}" y1="${cy}" x2="${cx + 15}" y2="${cy}" />
-          <line x1="${cx}" y1="${cy - 15}" x2="${cx}" y2="${cy + 15}" />
-        </g>
-
-        <!-- Red REC dot overlay -->
-        <g transform="translate(730, 110)">
-          <circle cx="10" cy="8" r="6" fill="${colors.coral || '#f2725c'}" />
-          <text x="24" y="12" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">REC [LIVE]</text>
-        </g>
-
-        <g transform="translate(150, 110)">
-          <text x="10" y="12" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" opacity="0.7">SHUTTER: 1/125s</text>
-          <text x="10" y="26" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" opacity="0.7">ISO: 400</text>
-        </g>
-      `;
-
-      themeTitleSection = `
-        <text x="512" y="875" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="64" text-anchor="middle" letter-spacing="-1.5px">CONTENT CREATOR</text>
-        <text x="512" y="918" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="26" text-anchor="middle" letter-spacing="1px">${displayName}</text>
-        <text x="512" y="948" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="13" text-anchor="middle" letter-spacing="1px">${displayPosition}</text>
-
-        <text x="80" y="980" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-size="12" opacity="0.5">HACKER HOUSE GOA 2026 // CONTENT</text>
-        <text x="944" y="980" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="end" opacity="0.5">GOA, INDIA // 28–31 OCT 2026</text>
-      `;
-      break;
-
-    case 'NIGHT_SHIPPER':
-      // Late night maker theme (stars, moon outline, night sky coordinate ticks)
-      backgroundDecorations = `
-        <!-- Night sky decorations -->
-        <!-- Constellation dots -->
-        <circle cx="200" cy="180" r="1.5" fill="${colors.accent}" opacity="0.7" />
-        <circle cx="240" cy="150" r="1.5" fill="${colors.accent}" opacity="0.5" />
-        <circle cx="280" cy="170" r="2" fill="${colors.accent}" opacity="0.8" />
-        <line x1="200" y1="180" x2="280" y2="170" stroke="${colors.muted}" stroke-width="0.5" opacity="0.4" />
-        <line x1="280" y1="170" x2="240" y2="150" stroke="${colors.muted}" stroke-width="0.5" opacity="0.4" />
-
-        <circle cx="800" cy="200" r="2.5" fill="${colors.accent}" opacity="0.9" />
-        <circle cx="850" cy="280" r="1.5" fill="${colors.accent}" opacity="0.6" />
-        
-        <!-- Lunar outline -->
-        <path d="M 860 140 A 30 30 0 0 1 820 100 A 30 30 0 0 0 860 140 Z" fill="${colors.accent}" opacity="0.25" />
-
-        <!-- Vertical grid lines on margins -->
-        <line x1="60" y1="0" x2="60" y2="1024" stroke="${colors.muted}" stroke-width="0.8" opacity="0.2" />
-        <line x1="964" y1="0" x2="964" y2="1024" stroke="${colors.muted}" stroke-width="0.8" opacity="0.2" />
-      `;
-
-      foregroundDecorations = `
-        <!-- High impact simple border with yellow corners -->
-        ${shape === 'CIRCLE'
-          ? `<circle cx="${cx}" cy="${cy}" r="382" fill="none" stroke="${colors.accent}" stroke-width="2" />`
-          : `<rect x="${containerX}" y="${containerY}" width="${containerSize}" height="${containerSize}" rx="48" ry="48" fill="none" stroke="${colors.muted}" stroke-width="1.5" />
-             <rect x="${containerX - 2}" y="${containerY - 2}" width="${containerSize + 4}" height="${containerSize + 4}" rx="50" ry="50" fill="none" stroke="${colors.accent}" stroke-width="2.5" />`
-        }
-
-        <!-- Ship detail metrics -->
-        <g transform="translate(150, 110)">
-          <text x="10" y="12" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700">SYS_TIME: 03:42:09 AM</text>
-          <text x="10" y="26" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" opacity="0.6">FUEL_METRIC: CAFFEINE</text>
-        </g>
-        
-        <g transform="translate(710, 110)">
-          <text x="160" y="12" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="end" opacity="0.6">STREAK: ACTIVE</text>
-          <text x="160" y="26" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-size="11" font-weight="700" text-anchor="end">[PROD_DEPLOY: OK]</text>
-        </g>
-      `;
-
-      themeTitleSection = `
-        <text x="512" y="875" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="64" text-anchor="middle" letter-spacing="-2px">NIGHT SHIPPER</text>
-        <text x="512" y="918" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="26" text-anchor="middle" letter-spacing="1px">${displayName}</text>
-        <text x="512" y="948" fill="${colors.accent}" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="13" text-anchor="middle" letter-spacing="1px">${displayPosition}</text>
-
-        <!-- Footer -->
-        <text x="80" y="980" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-size="12" opacity="0.5">HACKER HOUSE GOA 2026 // BUILD &amp; SHIP</text>
-        <text x="944" y="980" fill="${colors.text}" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="end" opacity="0.5">GOA, INDIA // 28–31 OCT 2026 // 247</text>
-      `;
-      break;
+  // Custom Identity Accent Overlay (viewfinder corners/lines)
+  let identityOverlay = '';
+  if (themeId === 'CYBER_DEFENDER') {
+    identityOverlay = `
+      <!-- Cyber connection lines around photo -->
+      <g stroke="#00f0ff" stroke-width="1.5" opacity="0.35" fill="none">
+        <path d="M 302 435 L 250 435 L 220 405" />
+        <path d="M 722 435 L 772 435 L 802 405" />
+        <circle cx="220" cy="405" r="3.5" fill="#00f0ff" />
+        <circle cx="802" cy="405" r="3.5" fill="#00f0ff" />
+      </g>
+    `;
+  } else if (themeId === 'AI_EXPLORER') {
+    identityOverlay = `
+      <!-- Concentric tech orbit rings -->
+      <circle cx="${cx}" cy="${cy}" r="240" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.3" stroke-dasharray="2 10" />
+      <circle cx="${cx}" cy="${cy}" r="250" fill="none" stroke="#38bdf8" stroke-width="0.8" opacity="0.25" />
+    `;
+  } else if (themeId === 'CODE_BUILDER') {
+    identityOverlay = `
+      <!-- Code bracket indicators around photo corners -->
+      <g stroke="#38bdf8" stroke-width="2.5" opacity="0.45" fill="none">
+        <path d="M 270 240 L 240 240 L 240 270" />
+        <path d="M 754 240 L 784 240 L 784 270" />
+        <path d="M 240 600 L 240 630 L 270 630" />
+        <path d="M 784 600 L 784 630 L 754 630" />
+      </g>
+    `;
+  } else if (themeId === 'CREATIVE_BUILDER') {
+    identityOverlay = `
+      <!-- Flowing creative curves around photo -->
+      <path d="M 240 435 Q 350 400, 512 435 T 784 435" fill="none" stroke="#ff007f" stroke-width="1.5" opacity="0.3" />
+      <path d="M 240 455 Q 350 420, 512 455 T 784 455" fill="none" stroke="#ffde6a" stroke-width="1" opacity="0.25" />
+    `;
+  } else if (themeId === 'CONTENT_CREATOR') {
+    identityOverlay = `
+      <!-- Camera viewfinder corner ticks -->
+      <g stroke="#00f0ff" stroke-width="2" opacity="0.45" fill="none">
+        <path d="M 292 235 L 292 215 L 312 215" />
+        <path d="M 712 215 L 732 215 L 732 235" />
+        <path d="M 292 635 L 292 655 L 312 655" />
+        <path d="M 712 655 L 732 655 L 732 635" />
+      </g>
+    `;
+  } else if (themeId === 'NIGHT_SHIPPER') {
+    identityOverlay = `
+      <!-- Constellation dot mappings in sky -->
+      <circle cx="200" cy="180" r="1.5" fill="#38bdf8" opacity="0.8" />
+      <circle cx="280" cy="150" r="1" fill="#ffde6a" opacity="0.7" />
+      <circle cx="800" cy="190" r="2" fill="#38bdf8" opacity="0.9" />
+    `;
   }
 
-  // Final SVG String composition.
-  // Note: All custom fonts must be declared indefs/style.
-  // If we are exporting to PNG, embedFontsCss will have base64 files.
-  // In the browser, it is empty and loads fonts from the parent document automatically.
   return `
-<svg viewBox="0 0 1024 1024" width="1024" height="1024" xmlns="http://www.w3.org/2000/svg" style="background-color: ${colors.bg};">
+<svg viewBox="0 0 1024 1024" width="1024" height="1024" xmlns="http://www.w3.org/2000/svg" style="background-color: #020b14;">
   <defs>
     <!-- Fonts inclusion -->
     <style>
@@ -466,37 +158,337 @@ export function renderSvgString({
         @import url('https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&family=JetBrains+Mono:ital,wght@0,100..800;1,100..800&family=Space+Grotesk:wght@300..700&display=swap');
       `}
       
-      /* Base classes for styles */
       svg {
-        background-color: ${colors.bg};
+        background-color: #020b14;
         user-select: none;
       }
     </style>
 
-    <!-- Clipping path for user photo -->
+    <!-- Clipping path for circular user photo -->
     <clipPath id="photo-clip">
       ${clipPathSvg}
     </clipPath>
+
+    <!-- Sky to Ocean Gradient -->
+    <linearGradient id="sky-ocean-grad" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#bae6fd" />
+      <stop offset="25%" stop-color="#38bdf8" />
+      <stop offset="50%" stop-color="#0284c7" />
+      <stop offset="75%" stop-color="#0c4a6e" />
+      <stop offset="100%" stop-color="#021526" />
+    </linearGradient>
+
+    <!-- Subtle background dots grid -->
+    <pattern id="grid-dots" width="30" height="30" patternUnits="userSpaceOnUse">
+      <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.1" />
+    </pattern>
   </defs>
 
-  <!-- BACKGROUND DECORATIONS -->
-  ${backgroundDecorations}
+  <!-- 1. BACKDROP TROPICAL GRADIENT -->
+  <rect width="1024" height="1024" fill="url(#sky-ocean-grad)" />
+  <rect width="1024" height="1024" fill="url(#grid-dots)" />
 
-  <!-- THE PHOTO -->
-  ${photoElement}
+  <!-- 2. ENVIRONMENT SCENERY ILLUSTRATED -->
+  <!-- Distant islands -->
+  <path d="M 0 350 Q 150 330, 300 350 T 600 350 T 900 350 L 1024 350 L 1024 360 L 0 360 Z" fill="#013c58" opacity="0.8" />
+  <path d="M 120 350 Q 250 320, 380 350 T 700 350 L 1024 350 L 1024 355 L 0 355 Z" fill="#002b40" opacity="0.9" />
 
-  <!-- FOREGROUND ACCENTS & BORDERS -->
-  ${foregroundDecorations}
+  <!-- Exactly 2 soar birds on left -->
+  <path d="M 220 130 Q 230 110, 240 130 Q 250 110, 260 130" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+  <path d="M 280 160 Q 288 145, 296 160 Q 304 145, 312 160" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8" />
 
-  <!-- DYNAMIC AND GENERAL TEXTS (BRANDING) -->
-  <!-- Top brand line -->
-  <g transform="translate(512, 50)">
-    <text text-anchor="middle" fill="${colors.text}" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="18" letter-spacing="8px">HACKER HOUSE GOA 2026</text>
-    <line x1="-120" y1="8" x2="120" y2="8" stroke="${colors.accent}" stroke-width="1.5" />
+  <!-- Sailboat on the left -->
+  <g transform="translate(110, 270)">
+    <path d="M 10 70 L 60 70 L 70 55 L 0 55 Z" fill="#ffffff" />
+    <path d="M 10 70 L 60 70 L 55 75 L 15 75 Z" fill="#0284c7" />
+    <line x1="35" y1="55" x2="35" y2="10" stroke="#0f172a" stroke-width="2" />
+    <path d="M 35 15 L 65 50 L 37 50 Z" fill="#bae6fd" />
+    <path d="M 33 20 L 10 50 L 33 50 Z" fill="#00f0ff" />
+    <path d="M 35 10 L 45 13 L 35 16 Z" fill="#ffde6a" />
   </g>
 
-  <!-- DYNAMIC THEME TITLE & METADATA -->
-  ${themeTitleSection}
+  <!-- Right-side coast beach hills & palms -->
+  <path d="M 750 350 Q 880 310, 1024 220 L 1024 450 Q 880 430, 750 350 Z" fill="#0c4a6e" />
+  <!-- Palm 1 -->
+  <path d="M 980 250 Q 940 180, 920 100" fill="none" stroke="#052e16" stroke-width="8" stroke-linecap="round" />
+  <path d="M 920 100 Q 880 110, 850 140 M 920 100 Q 890 80, 870 50 M 920 100 Q 940 70, 970 60 M 920 100 Q 950 110, 980 130 M 920 100 Q 910 130, 890 160" fill="none" stroke="#14532d" stroke-width="4" stroke-linecap="round" />
+  <!-- Palm 2 -->
+  <path d="M 1010 240 Q 980 150, 950 80" fill="none" stroke="#052e16" stroke-width="10" stroke-linecap="round" />
+  <path d="M 950 80 Q 910 90, 880 120 M 950 80 Q 920 60, 900 30 M 950 80 Q 970 50, 1000 40 M 950 80 Q 980 90, 1010 110" fill="none" stroke="#15803d" stroke-width="5" stroke-linecap="round" />
+
+  <!-- Left-side beach palm -->
+  <path d="M 40 280 Q 70 180, 90 90" fill="none" stroke="#052e16" stroke-width="12" stroke-linecap="round" />
+  <path d="M 90 90 Q 50 100, 20 130 M 90 90 Q 60 70, 40 40 M 90 90 Q 110 60, 140 50 M 90 90 Q 120 100, 150 120 M 90 90 Q 80 120, 60 150" fill="none" stroke="#166534" stroke-width="6" stroke-linecap="round" />
+
+  <!-- Dotted Postage Stamp (Top Left) -->
+  <g transform="translate(45, 30)">
+    <rect x="0" y="0" width="110" height="110" fill="#0f2b48" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4" rx="4" />
+    <text x="15" y="25" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12">GOA</text>
+    <text x="15" y="40" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12">INDIA</text>
+    <circle cx="55" cy="80" r="14" fill="#ffde6a" />
+    <path d="M 30 85 Q 55 80, 80 85 T 100 85" fill="none" stroke="#38bdf8" stroke-width="2" />
+    <path d="M 25 91 Q 55 87, 85 91" fill="none" stroke="#ffffff" stroke-width="1.5" />
+  </g>
+
+  <!-- Circular Stamp (Top Right) -->
+  <g transform="translate(865, 30)" opacity="0.9">
+    <circle cx="50" cy="50" r="45" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3" />
+    <circle cx="50" cy="50" r="40" fill="none" stroke="#ffde6a" stroke-width="1.5" />
+    <text x="50" y="42" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="8" text-anchor="middle">BUILD IN GOA</text>
+    <path d="M 25 50 Q 50 45, 75 50" fill="none" stroke="#ffde6a" stroke-width="1" />
+    <text x="50" y="65" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="7" text-anchor="middle">SHIP FROM PARADISE</text>
+  </g>
+
+  <!-- Left wooden signpost -->
+  <g transform="translate(25, 410)">
+    <rect x="75" y="0" width="12" height="150" fill="#78350f" rx="2" />
+    <!-- BUILD sign -->
+    <g transform="translate(0, 10)">
+      <path d="M 0 0 L 80 0 L 95 12 L 80 24 L 0 24 Z" fill="#ffde6a" />
+      <text x="40" y="17" fill="#0f2537" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11" text-anchor="middle">BUILD</text>
+    </g>
+    <!-- SHIP sign -->
+    <g transform="translate(5, 45)">
+      <path d="M 0 0 L 75 0 L 90 12 L 75 24 L 0 24 Z" fill="#0284c7" />
+      <text x="38" y="17" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11" text-anchor="middle">SHIP</text>
+    </g>
+    <!-- REPEAT sign -->
+    <g transform="translate(0, 80)">
+      <path d="M 0 0 L 80 0 L 95 12 L 80 24 L 0 24 Z" fill="#0ea5e9" />
+      <text x="40" y="17" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="10" text-anchor="middle">REPEAT</text>
+    </g>
+  </g>
+
+  <!-- LET'S BUILD post-it tag (Right) -->
+  <g transform="translate(825, 260) rotate(8)">
+    <rect x="0" y="0" width="110" height="75" fill="#0f3b5f" stroke="#ffde6a" stroke-width="1.5" rx="4" />
+    <text x="55" y="32" fill="#ffde6a" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="14" text-anchor="middle">LET'S</text>
+    <text x="55" y="52" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="14" text-anchor="middle">BUILD!</text>
+  </g>
+
+  <!-- 3. TOP BRANDING TITLE BLOCK -->
+  <g transform="translate(512, 12)">
+    <rect x="-60" y="0" width="120" height="88" fill="#0f2b48" rx="8" stroke="#ffde6a" stroke-width="1.5" />
+    <path d="M -8 18 Q 0 10, 8 18 M 0 10 L 0 35 M -12 28 Q 0 20, 12 28" fill="none" stroke="#ffde6a" stroke-width="2" stroke-linecap="round" />
+    <text x="0" y="48" fill="#ffde6a" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="15" text-anchor="middle" letter-spacing="1px">HH</text>
+    <text x="0" y="63" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="12" text-anchor="middle" letter-spacing="0.5px">GOA</text>
+    <text x="0" y="78" fill="#ffde6a" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">2026</text>
+  </g>
+
+  <g transform="translate(512, 135)">
+    <text x="0" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="46" text-anchor="middle" letter-spacing="-1px">HACKER <tspan fill="#ffde6a" font-family="'Fraunces', serif" font-style="italic">Goa</tspan> HOUSE</text>
+    <!-- Under Title Year Pill -->
+    <rect x="-85" y="10" width="170" height="28" fill="#0f2b48" rx="14" stroke="#38bdf8" stroke-width="1.5" />
+    <text x="0" y="30" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="16" text-anchor="middle" letter-spacing="3px">2026</text>
+    <text x="0" y="56" fill="#bae6fd" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="10" text-anchor="middle" letter-spacing="4px">BUILD • INNOVATE • IMPACT</text>
+  </g>
+
+  <!-- Left/Right margins metadata -->
+  <g transform="translate(45, 235)">
+    <text x="0" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="12" opacity="0.8">28 – 31</text>
+    <text x="0" y="15" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="12" opacity="0.8">OCT 2026</text>
+    
+    <!-- Location Pin -->
+    <path d="M 0 35c0-4.4 3.6-8 8-8s8 3.6 8 8c0 4.4-8 12-8 12S 0 39.4 0 35z" fill="#ffde6a" transform="translate(0, 15)" />
+    <text x="22" y="46" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="12" transform="translate(0, 15)">GOA</text>
+    <text x="22" y="58" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="10" opacity="0.7" transform="translate(0, 15)">INDIA</text>
+  </g>
+
+  <!-- 4. PHOTO WORKSPACE LAYOUT -->
+  <!-- Outer white frame of circular photo -->
+  <circle cx="${cx}" cy="${cy}" r="222" fill="none" stroke="#ffffff" stroke-width="4.5" />
+  <!-- HUD circular ticks inside -->
+  <circle cx="${cx}" cy="${cy}" r="215" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="6 8" />
+
+  <!-- DYNAMIC USER PHOTO -->
+  ${photoElement}
+
+  <!-- Wave crashing overlay on the circular boundary (bottom left) -->
+  <g transform="translate(${cx - 170}, ${cy + 95})">
+    <path d="M 0 60 C 20 40, 50 10, 80 0 C 95 -5, 110 5, 120 20 C 130 35, 125 50, 100 65 C 80 75, 40 80, 0 60 Z" fill="#0284c7" />
+    <path d="M 5 62 C 22 45, 52 20, 78 10 C 90 5, 102 12, 110 25 Q 90 40, 70 55 C 50 65, 25 70, 5 62 Z" fill="#00f0ff" />
+    <path d="M 10 65 C 25 50, 55 30, 75 22 C 85 18, 92 22, 98 30 Q 82 42, 65 54 C 48 62, 28 68, 10 65 Z" fill="#ffffff" />
+    <circle cx="105" cy="15" r="3.5" fill="#ffffff" />
+    <circle cx="115" cy="28" r="2.5" fill="#ffffff" />
+    <circle cx="85" cy="8" r="2" fill="#ffffff" />
+  </g>
+
+  <!-- DYNAMIC IDENTITY BADGE OVERLAY (on the right of the photo) -->
+  <g transform="translate(730, 440)">
+    <circle cx="45" cy="45" r="40" fill="#0f2b48" stroke="#38bdf8" stroke-width="2" />
+    
+    <!-- Dynamic Identity Icon -->
+    ${themeId === 'CYBER_DEFENDER' 
+      ? `<path d="M 45 25 L 65 32 L 65 52 C 65 64, 45 72, 45 72 C 45 72, 25 64, 25 52 L 25 32 Z" fill="none" stroke="#00f0ff" stroke-width="2.5" />
+         <circle cx="45" cy="48" r="6" fill="#00f0ff" />`
+      : themeId === 'AI_EXPLORER'
+      ? `<circle cx="45" cy="45" r="18" fill="none" stroke="#00f0ff" stroke-width="2.5" />
+         <circle cx="45" cy="45" r="8" fill="#00f0ff" />
+         <path d="M 22 45 L 68 45 M 45 22 L 45 68" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="2 2" />`
+      : themeId === 'CODE_BUILDER'
+      ? `<path d="M 33 37 L 23 45 L 33 53 M 57 37 L 67 45 L 57 53 M 49 31 L 41 59" stroke="#00f0ff" stroke-width="3" stroke-linecap="round" />`
+      : themeId === 'CREATIVE_BUILDER'
+      ? `<path d="M 30 55 C 30 35, 60 35, 60 55 C 60 65, 45 65, 45 70" fill="none" stroke="#ff007f" stroke-width="3" />
+         <circle cx="45" cy="30" r="8" fill="#ff007f" />`
+      : themeId === 'CONTENT_CREATOR'
+      ? `<rect x="25" y="32" width="30" height="22" rx="4" fill="none" stroke="#00f0ff" stroke-width="2.5" />
+         <path d="M 55 38 L 67 31 L 67 55 L 55 48 Z" fill="#00f0ff" />`
+      : `<path d="M 30 60 L 45 25 L 60 60 Z" fill="none" stroke="#38bdf8" stroke-width="2.5" />
+         <circle cx="45" cy="22" r="4" fill="#ffde6a" />`
+    }
+    
+    <!-- Label -->
+    <text x="45" y="102" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11" text-anchor="middle" letter-spacing="1px">${theme.name.toUpperCase()}</text>
+  </g>
+
+  <!-- CUSTOM IDENTITY ACCENT OVERLAY -->
+  ${identityOverlay}
+
+  <!-- 5. NAME & POSITION PILLS -->
+  <!-- Name badge rounded container -->
+  <g transform="translate(150, 622)">
+    <rect x="0" y="0" width="724" height="60" fill="#0f2b48" rx="30" stroke="#38bdf8" stroke-width="2.5" />
+    <text x="35" y="38" fill="#ffde6a" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="24">✦</text>
+    <text x="689" y="38" fill="#ffde6a" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="24" text-anchor="end">✦</text>
+    <text x="362" y="41" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="28" text-anchor="middle" letter-spacing="1px">${displayName}</text>
+  </g>
+
+  <!-- Position pill underneath -->
+  <g transform="translate(300, 694)">
+    <rect x="0" y="0" width="424" height="34" fill="#ffde6a" rx="17" />
+    <text x="212" y="22" fill="#0f2b48" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="14" text-anchor="middle" letter-spacing="0.5px">⚡ ${displayPosition} ⚡</text>
+  </g>
+
+  <!-- 6. THREE-COLUMN BOTTOM META INFORMATION SYSTEM -->
+  <g transform="translate(0, 755)">
+    <!-- Vertical Column Dividers -->
+    <line x1="330" y1="10" x2="330" y2="180" stroke="#38bdf8" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 4" />
+    <line x1="650" y1="10" x2="650" y2="180" stroke="#38bdf8" stroke-width="1.5" opacity="0.3" stroke-dasharray="4 4" />
+
+    <!-- Column 1: BUILDER CLASS -->
+    <g transform="translate(60, 0)">
+      <text x="110" y="20" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12" text-anchor="middle" letter-spacing="1.5px">✦ BUILDER CLASS ✦</text>
+      <text x="110" y="44" fill="#ffffff" font-family="'Fraunces', serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="-0.5px">${builderClass}</text>
+      
+      <!-- Mock Vector QR Code -->
+      <g transform="translate(50, 60)">
+        <rect x="0" y="0" width="120" height="120" fill="#ffffff" rx="8" />
+        <rect x="10" y="10" width="30" height="30" fill="#0f2b48" />
+        <rect x="15" y="15" width="20" height="20" fill="#ffffff" />
+        <rect x="18" y="18" width="14" height="14" fill="#0f2b48" />
+        
+        <rect x="80" y="10" width="30" height="30" fill="#0f2b48" />
+        <rect x="85" y="15" width="20" height="20" fill="#ffffff" />
+        <rect x="88" y="18" width="14" height="14" fill="#0f2b48" />
+        
+        <rect x="10" y="80" width="30" height="30" fill="#0f2b48" />
+        <rect x="15" y="85" width="20" height="20" fill="#ffffff" />
+        <rect x="18" y="88" width="14" height="14" fill="#0f2b48" />
+        
+        <!-- Random QR code data dots -->
+        <rect x="50" y="15" width="10" height="20" fill="#0ea5e9" />
+        <rect x="50" y="45" width="20" height="10" fill="#0ea5e9" />
+        <rect x="15" y="50" width="20" height="10" fill="#0ea5e9" />
+        <rect x="80" y="50" width="15" height="15" fill="#0ea5e9" />
+        <rect x="50" y="80" width="20" height="20" fill="#0ea5e9" />
+        <rect x="80" y="80" width="10" height="10" fill="#0ea5e9" />
+        
+        <!-- Mini Palm tree at QR center -->
+        <path d="M 60 70 L 60 50 Q 50 52, 48 60 M 60 50 Q 70 52, 72 60 M 60 50 Q 55 45, 50 40 M 60 50 Q 65 45, 70 40" fill="none" stroke="#166534" stroke-width="2.5" />
+      </g>
+    </g>
+
+    <!-- Column 2: BEACH BAG -->
+    <g transform="translate(360, 0)">
+      <text x="110" y="20" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12" text-anchor="middle" letter-spacing="1.5px">✦ BEACH BAG ✦</text>
+      
+      <!-- Coconut -->
+      <g transform="translate(10, 42)">
+        <circle cx="20" cy="10" r="10" fill="#78350f" />
+        <path d="M 12 6 Q 16 10, 20 8 M 22 4 Q 24 10, 20 12" fill="none" stroke="#ffffff" stroke-width="1.5" />
+        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">COCONUT</text>
+      </g>
+      
+      <!-- VS Code -->
+      <g transform="translate(10, 74)">
+        <rect x="10" y="2" width="20" height="16" fill="#0ea5e9" rx="3" />
+        <path d="M 14 6 L 18 10 L 14 14" fill="none" stroke="#ffffff" stroke-width="2" />
+        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">VS CODE</text>
+      </g>
+      
+      <!-- Lo-Fi Beats -->
+      <g transform="translate(10, 106)">
+        <path d="M 12 18 L 12 10 A 8 8 0 0 1 28 10 L 28 18" fill="none" stroke="#ffde6a" stroke-width="3" stroke-linecap="round" />
+        <circle cx="12" cy="18" r="4" fill="#ffde6a" />
+        <circle cx="28" cy="18" r="4" fill="#ffde6a" />
+        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">LO-FI BEATS</text>
+      </g>
+      
+      <!-- Surfboard -->
+      <g transform="translate(10, 138)">
+        <path d="M 20 0 Q 25 10, 25 20 Q 25 30, 20 35 Q 15 30, 15 20 Q 15 10, 20 0 Z" fill="#00f0ff" />
+        <path d="M 20 0 L 20 35" stroke="#ffffff" stroke-width="1.2" />
+        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">SURFBOARD</text>
+      </g>
+    </g>
+
+    <!-- Column 3: CURRENTLY SHIPPING -->
+    <g transform="translate(660, 0)">
+      <text x="135" y="20" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12" text-anchor="middle" letter-spacing="1.5px">✦ CURRENTLY SHIPPING ✦</text>
+      <text x="135" y="44" fill="#ffffff" font-family="'Fraunces', serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="-0.5px">BUILDING THE FUTURE</text>
+      
+      <!-- Mock Barcode System -->
+      <g transform="translate(45, 60)">
+        <line x1="0" y1="0" x2="0" y2="40" stroke="#ffffff" stroke-width="2" />
+        <line x1="5" y1="0" x2="5" y2="40" stroke="#ffffff" stroke-width="4" />
+        <line x1="12" y1="0" x2="12" y2="40" stroke="#ffffff" stroke-width="1" />
+        <line x1="16" y1="0" x2="16" y2="40" stroke="#ffffff" stroke-width="3" />
+        <line x1="23" y1="0" x2="23" y2="40" stroke="#ffffff" stroke-width="5" />
+        <line x1="32" y1="0" x2="32" y2="40" stroke="#ffffff" stroke-width="2" />
+        <line x1="38" y1="0" x2="38" y2="40" stroke="#ffffff" stroke-width="4" />
+        <line x1="46" y1="0" x2="46" y2="40" stroke="#ffffff" stroke-width="1" />
+        <line x1="50" y1="0" x2="50" y2="40" stroke="#ffffff" stroke-width="3" />
+        <line x1="58" y1="0" x2="58" y2="40" stroke="#ffffff" stroke-width="6" />
+        <line x1="68" y1="0" x2="68" y2="40" stroke="#ffffff" stroke-width="2" />
+        <line x1="74" y1="0" x2="74" y2="40" stroke="#ffffff" stroke-width="4" />
+        <line x1="82" y1="0" x2="82" y2="40" stroke="#ffffff" stroke-width="1" />
+        <line x1="86" y1="0" x2="86" y2="40" stroke="#ffffff" stroke-width="3" />
+        <line x1="94" y1="0" x2="94" y2="40" stroke="#ffffff" stroke-width="5" />
+        <line x1="104" y1="0" x2="104" y2="40" stroke="#ffffff" stroke-width="2" />
+        <line x1="110" y1="0" x2="110" y2="40" stroke="#ffffff" stroke-width="4" />
+        <line x1="118" y1="0" x2="118" y2="40" stroke="#ffffff" stroke-width="1" />
+        <line x1="122" y1="0" x2="122" y2="40" stroke="#ffffff" stroke-width="3" />
+        <line x1="130" y1="0" x2="130" y2="40" stroke="#ffffff" stroke-width="6" />
+        <line x1="140" y1="0" x2="140" y2="40" stroke="#ffffff" stroke-width="2" />
+        <line x1="146" y1="0" x2="146" y2="40" stroke="#ffffff" stroke-width="4" />
+        <line x1="154" y1="0" x2="154" y2="40" stroke="#ffffff" stroke-width="1" />
+        <line x1="158" y1="0" x2="158" y2="40" stroke="#ffffff" stroke-width="3" />
+        <line x1="166" y1="0" x2="166" y2="40" stroke="#ffffff" stroke-width="5" />
+        <text x="83" y="55" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">BUILDER ID: ${builderId}</text>
+      </g>
+      
+      <!-- Coder illustration under tree -->
+      <g transform="translate(20, 115)">
+        <line x1="0" y1="45" x2="180" y2="45" stroke="#ffffff" stroke-width="1" opacity="0.3" />
+        <path d="M 160 45 Q 150 20, 140 5" fill="none" stroke="#78350f" stroke-width="3" />
+        <path d="M 140 5 Q 110 5, 90 20 M 140 5 Q 120 -10, 100 -20 M 140 5 Q 160 -10, 180 -15 M 140 5 Q 170 10, 190 20" fill="none" stroke="#166534" stroke-width="2.5" />
+        <circle cx="80" cy="36" r="5" fill="#38bdf8" />
+        <path d="M 80 41 L 80 45 L 75 45 M 80 41 L 88 43 L 92 45" stroke="#38bdf8" stroke-width="2.5" fill="none" />
+        <polygon points="92,40 98,34 98,45" fill="#ffde6a" opacity="0.75" />
+        <line x1="92" y1="45" x2="98" y2="45" stroke="#ffffff" stroke-width="1.5" />
+      </g>
+    </g>
+  </g>
+
+  <!-- 7. BOTTOM BEACH SHORELINE & HASHTAG -->
+  <!-- Starfish bottom left -->
+  <g transform="translate(120, 946)">
+    <path d="M 0 -15 L 4 -4 L 15 -4 L 7 3 L 10 14 L 0 7 L -10 14 L -7 3 L -15 -4 L -4 -4 Z" fill="#ff5a79" stroke="#ffffff" stroke-width="1" />
+  </g>
+  
+  <text x="330" y="976" fill="#ffde6a" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="20">★</text>
+  <text x="694" y="976" fill="#ffde6a" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="20" text-anchor="end">★</text>
+  <text x="512" y="978" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="25" text-anchor="middle" letter-spacing="4px">#FRAMEINGOA</text>
 </svg>
   `.trim();
 }
