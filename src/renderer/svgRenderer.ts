@@ -247,6 +247,35 @@ export function renderSvgString({
     <filter id="shadow" x="-10%" y="-10%" width="120%" height="120%">
       <feDropShadow dx="2" dy="5" stdDeviation="6" flood-color="#000000" flood-opacity="0.5" />
     </filter>
+
+    <!-- Postage Stamp Perforations Mask -->
+    <mask id="stamp-mask">
+      <rect x="0" y="0" width="110" height="110" fill="#ffffff" rx="4" />
+      <!-- Top edge punch holes -->
+      <circle cx="15" cy="0" r="4.5" fill="#000000" />
+      <circle cx="35" cy="0" r="4.5" fill="#000000" />
+      <circle cx="55" cy="0" r="4.5" fill="#000000" />
+      <circle cx="75" cy="0" r="4.5" fill="#000000" />
+      <circle cx="95" cy="0" r="4.5" fill="#000000" />
+      <!-- Bottom edge punch holes -->
+      <circle cx="15" cy="110" r="4.5" fill="#000000" />
+      <circle cx="35" cy="110" r="4.5" fill="#000000" />
+      <circle cx="55" cy="110" r="4.5" fill="#000000" />
+      <circle cx="75" cy="110" r="4.5" fill="#000000" />
+      <circle cx="95" cy="110" r="4.5" fill="#000000" />
+      <!-- Left edge punch holes -->
+      <circle cx="0" cy="15" r="4.5" fill="#000000" />
+      <circle cx="0" cy="35" r="4.5" fill="#000000" />
+      <circle cx="0" cy="55" r="4.5" fill="#000000" />
+      <circle cx="0" cy="75" r="4.5" fill="#000000" />
+      <circle cx="0" cy="95" r="4.5" fill="#000000" />
+      <!-- Right edge punch holes -->
+      <circle cx="110" cy="15" r="4.5" fill="#000000" />
+      <circle cx="110" cy="35" r="4.5" fill="#000000" />
+      <circle cx="110" cy="55" r="4.5" fill="#000000" />
+      <circle cx="110" cy="75" r="4.5" fill="#000000" />
+      <circle cx="110" cy="95" r="4.5" fill="#000000" />
+    </mask>
   </defs>
 
   <!-- 1. BACKDROP TROPICAL GRADIENT -->
@@ -304,23 +333,29 @@ export function renderSvgString({
     </g>
   </g>
 
-  <!-- Dotted Postage Stamp (Top Left) -->
+  <!-- Perforated Postage Stamp (Top Left) -->
   <g transform="translate(45, 30)">
-    <rect x="0" y="0" width="110" height="110" fill="#0f2b48" stroke="#ffffff" stroke-width="1.5" stroke-dasharray="4 4" rx="4" />
+    <rect x="0" y="0" width="110" height="110" fill="#ffffff" mask="url(#stamp-mask)" />
+    <rect x="5" y="5" width="100" height="100" fill="#0f2b48" rx="2" />
     <text x="15" y="25" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12">GOA</text>
     <text x="15" y="40" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12">INDIA</text>
     <circle cx="55" cy="80" r="14" fill="#ffde6a" />
     <path d="M 30 85 Q 55 80, 80 85 T 100 85" fill="none" stroke="#38bdf8" stroke-width="2" />
     <path d="M 25 91 Q 55 87, 85 91" fill="none" stroke="#ffffff" stroke-width="1.5" />
+    <!-- Small palm tree inside stamp -->
+    <path d="M 85 85 L 85 70" stroke="#166534" stroke-width="2" />
+    <path d="M 85 70 Q 75 70, 70 75 M 85 70 Q 95 70, 100 75" fill="none" stroke="#166534" stroke-width="1.5" />
   </g>
 
   <!-- Circular Stamp (Top Right) -->
   <g transform="translate(865, 30)" opacity="0.9">
     <circle cx="50" cy="50" r="45" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3" />
     <circle cx="50" cy="50" r="40" fill="none" stroke="#ffde6a" stroke-width="1.5" />
-    <text x="50" y="42" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="8" text-anchor="middle">BUILD IN GOA</text>
-    <path d="M 25 50 Q 50 45, 75 50" fill="none" stroke="#ffde6a" stroke-width="1" />
-    <text x="50" y="65" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="7" text-anchor="middle">SHIP FROM PARADISE</text>
+    <!-- Palm tree in circular stamp center -->
+    <path d="M 50 62 L 50 42" stroke="#ffde6a" stroke-width="2" />
+    <path d="M 50 42 Q 40 42, 35 48 M 50 42 Q 60 42, 65 48 M 50 42 Q 45 35, 40 30 M 50 42 Q 55 35, 60 30" fill="none" stroke="#ffde6a" stroke-width="1.5" />
+    <text x="50" y="27" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="7" text-anchor="middle">BUILD IN GOA</text>
+    <text x="50" y="78" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="6.5" text-anchor="middle">SHIP FROM PARADISE</text>
   </g>
 
   <!-- Left wooden signpost -->
@@ -359,7 +394,7 @@ export function renderSvgString({
     <text x="0" y="78" fill="#ffde6a" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">2026</text>
   </g>
 
-  <!-- Title Section with script Overlay (Centered properly to prevent overlapping text labels) -->
+  <!-- Title Section with script Overlay (Sufficiently spaced to solve overlaps) -->
   <g transform="translate(512, 135)">
     <!-- Spaced middle-anchored header titles to eliminate overlaps -->
     <text x="-195" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="46" text-anchor="middle" letter-spacing="-1px">HACKER</text>
@@ -391,6 +426,18 @@ export function renderSvgString({
 
   <!-- DYNAMIC USER PHOTO -->
   ${photoElement}
+
+  <!-- Beautiful, high-fidelity crashing wave overlay at bottom-left boundary -->
+  <g transform="translate(${cx - 150}, ${cy + 70})">
+    <path d="M 10 90 Q 50 60, 70 20 T 110 -10 Q 120 5, 115 25 Q 95 65, 30 85 Z" fill="#025985" />
+    <path d="M 15 90 Q 52 65, 72 30 T 106 5 Q 112 18, 100 45 Q 85 70, 35 88 Z" fill="#00f0ff" />
+    <path d="M 20 90 Q 55 70, 75 40 T 100 20 C 105 25, 95 40, 85 55 Q 70 75, 40 90 Z" fill="#ffffff" />
+    <circle cx="108" cy="-5" r="4" fill="#ffffff" />
+    <circle cx="120" cy="8" r="3" fill="#ffffff" />
+    <circle cx="95" cy="-8" r="3.5" fill="#ffffff" />
+    <circle cx="80" cy="-12" r="2.5" fill="#ffffff" />
+    <circle cx="65" cy="5" r="2" fill="#ffffff" />
+  </g>
 
   <!-- DYNAMIC IDENTITY BADGE OVERLAY (on the right of the photo) -->
   <g transform="translate(680, 440)">
@@ -464,12 +511,15 @@ export function renderSvgString({
       <text x="110" y="20" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12" text-anchor="middle" letter-spacing="1.5px">✦ BUILDER CLASS ✦</text>
       <text x="110" y="44" fill="#ffffff" font-family="'Fraunces', serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="-0.5px">${builderClass}</text>
       
-      <!-- 100% Real Scannable QR Code target link -->
+      <!-- 100% Real Scannable QR Code with palm tree in center -->
       <g transform="translate(50, 60)">
         <rect x="0" y="0" width="120" height="120" fill="#ffffff" rx="8" />
         <g transform="translate(10, 10)">
           ${qrCodeRects}
         </g>
+        <!-- Center palm overlay -->
+        <rect x="44" y="44" width="32" height="32" fill="#ffffff" rx="4" />
+        <path d="M 60 72 L 60 52 Q 52 54, 50 62 M 60 52 Q 68 54, 70 62 M 60 52 Q 55 47, 50 42 M 60 52 Q 65 47, 70 42" fill="none" stroke="#166534" stroke-width="2.5" stroke-linecap="round" />
       </g>
     </g>
 
@@ -479,31 +529,34 @@ export function renderSvgString({
       
       <!-- Coconut -->
       <g transform="translate(10, 42)">
-        <circle cx="20" cy="10" r="10" fill="#78350f" />
-        <path d="M 12 6 Q 16 10, 20 8 M 22 4 Q 24 10, 20 12" fill="none" stroke="#ffffff" stroke-width="1.5" />
-        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">COCONUT</text>
+        <circle cx="15" cy="15" r="10" fill="#78350f" />
+        <circle cx="15" cy="15" r="7" fill="#ffffff" />
+        <circle cx="15" cy="15" r="5" fill="#38bdf8" opacity="0.3" />
+        <line x1="15" y1="15" x2="25" y2="2" stroke="#ffde6a" stroke-width="2" stroke-linecap="round" />
+        <line x1="25" y1="2" x2="30" y2="2" stroke="#ffde6a" stroke-width="2" stroke-linecap="round" />
+        <text x="45" y="18" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">COCONUT</text>
       </g>
       
       <!-- VS Code -->
       <g transform="translate(10, 74)">
-        <rect x="10" y="2" width="20" height="16" fill="#0ea5e9" rx="3" />
-        <path d="M 14 6 L 18 10 L 14 14" fill="none" stroke="#ffffff" stroke-width="2" />
-        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">VS CODE</text>
+        <rect x="5" y="5" width="20" height="16" fill="#1e3a5f" rx="3" stroke="#00f0ff" stroke-width="1.5" />
+        <path d="M 10 10 L 8 13 L 10 16 M 20 10 L 22 13 L 20 16" fill="none" stroke="#ffde6a" stroke-width="1.5" stroke-linecap="round" />
+        <text x="45" y="18" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">VS CODE</text>
       </g>
       
       <!-- Lo-Fi Beats -->
       <g transform="translate(10, 106)">
-        <path d="M 12 18 L 12 10 A 8 8 0 0 1 28 10 L 28 18" fill="none" stroke="#ffde6a" stroke-width="3" stroke-linecap="round" />
-        <circle cx="12" cy="18" r="4" fill="#ffde6a" />
-        <circle cx="28" cy="18" r="4" fill="#ffde6a" />
-        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">LO-FI BEATS</text>
+        <path d="M 7 17 A 8 8 0 0 1 23 17" fill="none" stroke="#ffde6a" stroke-width="2.5" stroke-linecap="round" />
+        <rect x="4" y="14" width="6" height="8" rx="2" fill="#ffde6a" />
+        <rect x="20" y="14" width="6" height="8" rx="2" fill="#ffde6a" />
+        <text x="45" y="18" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">LO-FI BEATS</text>
       </g>
       
       <!-- Surfboard -->
       <g transform="translate(10, 138)">
-        <path d="M 20 0 Q 25 10, 25 20 Q 25 30, 20 35 Q 15 30, 15 20 Q 15 10, 20 0 Z" fill="#00f0ff" />
-        <path d="M 20 0 L 20 35" stroke="#ffffff" stroke-width="1.2" />
-        <text x="45" y="14" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">SURFBOARD</text>
+        <path d="M 15 2 Q 22 12, 22 22 Q 22 30, 15 36 Q 8 30, 8 22 Q 8 12, 15 2 Z" fill="#00f0ff" />
+        <path d="M 15 2 L 15 36" stroke="#ffde6a" stroke-width="1.5" />
+        <text x="45" y="18" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="11" letter-spacing="0.5px">SURFBOARD</text>
       </g>
     </g>
 
