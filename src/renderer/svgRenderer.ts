@@ -104,9 +104,28 @@ export function renderSvgString({
         </defs>
         <rect width="1024" height="1024" fill="url(#cyber-grid)" />
         
+        <!-- Circuit board traces behind photo -->
+        <g stroke="${colors.accent}" stroke-width="1.5" fill="none" opacity="0.2">
+          <path d="M 150 200 L 300 200 L 350 250 L 350 350" />
+          <circle cx="150" cy="200" r="3.5" fill="${colors.accent}" />
+          
+          <path d="M 874 200 L 724 200 L 674 250 L 674 350" />
+          <circle cx="874" cy="200" r="3.5" fill="${colors.accent}" />
+          
+          <path d="M 150 720 L 250 720 L 300 670 L 300 570" />
+          <circle cx="150" cy="720" r="3.5" fill="${colors.accent}" />
+          
+          <path d="M 874 720 L 774 720 L 724 670 L 724 570" />
+          <circle cx="874" cy="720" r="3.5" fill="${colors.accent}" />
+        </g>
+        
         <!-- Large asymmetric technical circles behind photo -->
         <circle cx="${cx}" cy="${cy}" r="410" fill="none" stroke="${colors.muted}" stroke-width="1.5" stroke-dasharray="10 15" opacity="0.3" />
-        <circle cx="${cx}" cy="${cy}" r="430" fill="none" stroke="${colors.coral}" stroke-width="1" opacity="0.2" />
+        <circle cx="${cx}" cy="${cy}" r="430" fill="none" stroke="${colors.accent}" stroke-width="1" opacity="0.15" />
+        <circle cx="${cx}" cy="${cy}" r="450" fill="none" stroke="${colors.accent}" stroke-width="1.5" stroke-dasharray="5 20" opacity="0.2" />
+
+        <!-- Shield / security HUD outline at top behind photo -->
+        <path d="M 512 180 Q 562 180, 562 230 Q 562 310, 512 360 Q 462 310, 462 230 Q 462 180, 512 180 Z" fill="none" stroke="${colors.accent}" stroke-width="2" opacity="0.1" />
       `;
 
       foregroundDecorations = `

@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import { readFileAsDataUrl, loadImage } from '../utils/image';
 import { isHeicFile, convertHeicToPng } from '../utils/heic';
-import { Upload, FileImage, AlertTriangle, Loader2 } from 'lucide-react';
+import { Upload, FileImage, AlertTriangle, Loader2, Smartphone, FileText } from 'lucide-react';
 
 interface UploadStepProps {
   onUploadSuccess: (
@@ -84,7 +84,9 @@ export const UploadStep: React.FC<UploadStepProps> = ({ onUploadSuccess }) => {
   };
 
   const triggerFileInput = () => {
-    fileInputRef.current?.click();
+    if (fileInputRef.current) {
+      fileInputRef.current.click();
+    }
   };
 
   return (
@@ -128,12 +130,33 @@ export const UploadStep: React.FC<UploadStepProps> = ({ onUploadSuccess }) => {
         ) : (
           <div className="upload-state">
             <div className="upload-icon-wrapper">
-              <Upload size={32} className="upload-icon" />
+              <Upload size={28} className="upload-icon" />
             </div>
+            
+            {/* Wavy separator under icon */}
+            <svg className="upload-icon-wave" viewBox="0 0 30 6" width="30" height="6">
+              <path d="M 0 3 Q 7.5 0, 15 3 T 30 3" fill="none" stroke="#38bdf8" strokeWidth="2" />
+            </svg>
+
             <h3 className="upload-state-title">Drag & drop your photo</h3>
             <p className="upload-state-desc">or click to browse from files</p>
-            <div className="supported-formats">
-              <span>Supports JPG, PNG, and iPhone HEIC up to 15MB</span>
+            
+            {/* Split metadata row matching reference design */}
+            <div className="upload-metadata-row">
+              <div className="meta-item">
+                <FileImage size={14} className="meta-icon" />
+                <span>Supports JPG, PNG,</span>
+              </div>
+              <div className="meta-divider">|</div>
+              <div className="meta-item">
+                <Smartphone size={14} className="meta-icon" />
+                <span>and iPhone HEIC</span>
+              </div>
+              <div className="meta-divider">|</div>
+              <div className="meta-item">
+                <FileText size={14} className="meta-icon" />
+                <span>up to 15MB</span>
+              </div>
             </div>
           </div>
         )}
