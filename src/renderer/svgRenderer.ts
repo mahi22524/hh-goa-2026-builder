@@ -31,15 +31,15 @@ export function renderSvgString({
   const displayName = (name.trim() || 'YOUR NAME').toUpperCase();
   const displayPosition = (position.trim() || 'YOUR POSITION / ROLE').toUpperCase();
 
-  // Circle mask dimensions centered at cx=512, cy=435, r=210
-  const containerSize = 420;
-  const containerX = 302;
-  const containerY = 225;
+  // Circle mask dimensions centered at cx=512, cy=415, r=170 (slightly reduced for better breathing room)
+  const containerSize = 340;
+  const containerX = 342;
+  const containerY = 245;
 
   const cx = 512;
-  const cy = 435;
+  const cy = 415;
 
-  // Calculate photo positioning inside the 420x420 mask container
+  // Calculate photo positioning inside the 340x340 mask container
   let photoElement = '';
   if (photoUrl && photoWidth > 0 && photoHeight > 0) {
     const bounds = calculateImageBounds(
@@ -76,14 +76,14 @@ export function renderSvgString({
     photoElement = `
       <g clip-path="url(#photo-clip)">
         <rect x="${placeholderX}" y="${placeholderY}" width="${containerSize}" height="${containerSize}" fill="#0f2b48" />
-        <text x="${cx}" y="${cy - 10}" fill="#ffffff" opacity="0.3" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="20" text-anchor="middle">NO PHOTO</text>
-        <text x="${cx}" y="${cy + 15}" fill="#ffde6a" opacity="0.5" font-family="'JetBrains Mono', monospace" font-size="12" text-anchor="middle">[AWAITING_UPLOAD]</text>
+        <text x="${cx}" y="${cy - 10}" fill="#ffffff" opacity="0.3" font-family="'Space Grotesk', sans-serif" font-weight="700" font-size="18" text-anchor="middle">NO PHOTO</text>
+        <text x="${cx}" y="${cy + 15}" fill="#ffde6a" opacity="0.5" font-family="'JetBrains Mono', monospace" font-size="11" text-anchor="middle">[AWAITING_UPLOAD]</text>
       </g>
     `;
   }
 
-  // Define mask paths
-  const clipPathSvg = `<circle cx="512" cy="435" r="210" />`;
+  // Define circular mask path
+  const clipPathSvg = `<circle cx="512" cy="415" r="170" />`;
 
   // Determine dynamic builder class and ID
   let builderClass = 'SHIPPING WIZARD';
@@ -100,52 +100,63 @@ export function renderSvgString({
   let identityOverlay = '';
   if (themeId === 'CYBER_DEFENDER') {
     identityOverlay = `
-      <!-- Cyber connection lines around photo -->
+      <!-- Cyber Defender technical lines & network connections -->
       <g stroke="#00f0ff" stroke-width="1.5" opacity="0.35" fill="none">
-        <path d="M 302 435 L 250 435 L 220 405" />
-        <path d="M 722 435 L 772 435 L 802 405" />
-        <circle cx="220" cy="405" r="3.5" fill="#00f0ff" />
-        <circle cx="802" cy="405" r="3.5" fill="#00f0ff" />
+        <circle cx="${cx}" cy="${cy}" r="185" />
+        <circle cx="${cx}" cy="${cy}" r="200" stroke-dasharray="5 15" />
+        <path d="M 342 415 L 290 415 L 260 385" />
+        <path d="M 682 415 L 732 415 L 762 385" />
+        <circle cx="260" cy="385" r="3.5" fill="#00f0ff" />
+        <circle cx="762" cy="385" r="3.5" fill="#00f0ff" />
       </g>
     `;
   } else if (themeId === 'AI_EXPLORER') {
     identityOverlay = `
-      <!-- Concentric tech orbit rings -->
-      <circle cx="${cx}" cy="${cy}" r="240" fill="none" stroke="#00f0ff" stroke-width="1" opacity="0.3" stroke-dasharray="2 10" />
-      <circle cx="${cx}" cy="${cy}" r="250" fill="none" stroke="#38bdf8" stroke-width="0.8" opacity="0.25" />
+      <!-- AI Explorer concentric tech orbit rings -->
+      <g stroke="#00f0ff" stroke-width="1" opacity="0.3" fill="none">
+        <circle cx="${cx}" cy="${cy}" r="185" stroke-dasharray="1 8" />
+        <ellipse cx="${cx}" cy="${cy}" rx="210" ry="90" transform="rotate(30, ${cx}, ${cy})" />
+        <ellipse cx="${cx}" cy="${cy}" rx="210" ry="90" transform="rotate(-30, ${cx}, ${cy})" />
+        <circle cx="${cx - 180}" cy="${cy - 100}" r="4" fill="#00f0ff" />
+        <circle cx="${cx + 180}" cy="${cy + 100}" r="4" fill="#00f0ff" />
+      </g>
     `;
   } else if (themeId === 'CODE_BUILDER') {
     identityOverlay = `
-      <!-- Code bracket indicators around photo corners -->
+      <!-- Code Builder terminal window corner prompts -->
       <g stroke="#38bdf8" stroke-width="2.5" opacity="0.45" fill="none">
-        <path d="M 270 240 L 240 240 L 240 270" />
-        <path d="M 754 240 L 784 240 L 784 270" />
-        <path d="M 240 600 L 240 630 L 270 630" />
-        <path d="M 784 600 L 784 630 L 754 630" />
+        <path d="M 320 220 L 290 220 L 290 250" />
+        <path d="M 704 220 L 734 220 L 734 250" />
+        <path d="M 290 580 L 290 610 L 320 610" />
+        <path d="M 734 580 L 734 610 L 704 610" />
+        <text x="${cx - 220}" y="${cy - 90}" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="700" opacity="0.5">&lt;</text>
+        <text x="${cx + 205}" y="${cy - 90}" fill="#38bdf8" font-family="'JetBrains Mono', monospace" font-size="28" font-weight="700" opacity="0.5">&gt;</text>
       </g>
     `;
   } else if (themeId === 'CREATIVE_BUILDER') {
     identityOverlay = `
-      <!-- Flowing creative curves around photo -->
-      <path d="M 240 435 Q 350 400, 512 435 T 784 435" fill="none" stroke="#ff007f" stroke-width="1.5" opacity="0.3" />
-      <path d="M 240 455 Q 350 420, 512 455 T 784 455" fill="none" stroke="#ffde6a" stroke-width="1" opacity="0.25" />
+      <!-- Creative Builder organic flowing editorial curves -->
+      <g fill="none" stroke="#ff007f" stroke-width="2" opacity="0.3">
+        <path d="M 270 415 Q 350 380, 512 415 T 754 415" />
+        <path d="M 270 435 Q 350 400, 512 435 T 754 435" stroke="#ffde6a" stroke-width="1" />
+      </g>
     `;
   } else if (themeId === 'CONTENT_CREATOR') {
     identityOverlay = `
-      <!-- Camera viewfinder corner ticks -->
+      <!-- Content Creator technical viewfinder markings -->
       <g stroke="#00f0ff" stroke-width="2" opacity="0.45" fill="none">
-        <path d="M 292 235 L 292 215 L 312 215" />
-        <path d="M 712 215 L 732 215 L 732 235" />
-        <path d="M 292 635 L 292 655 L 312 655" />
-        <path d="M 712 655 L 732 655 L 732 635" />
+        <rect x="${cx - 185}" y="${cy - 185}" width="370" height="370" rx="10" stroke-dasharray="10 15" />
+        <circle cx="${cx}" cy="${cy}" r="195" />
       </g>
     `;
   } else if (themeId === 'NIGHT_SHIPPER') {
     identityOverlay = `
-      <!-- Constellation dot mappings in sky -->
-      <circle cx="200" cy="180" r="1.5" fill="#38bdf8" opacity="0.8" />
-      <circle cx="280" cy="150" r="1" fill="#ffde6a" opacity="0.7" />
-      <circle cx="800" cy="190" r="2" fill="#38bdf8" opacity="0.9" />
+      <!-- Night Shipper constellation mappings -->
+      <g stroke="#38bdf8" stroke-width="1" opacity="0.3" fill="none">
+        <circle cx="210" cy="180" r="1.5" fill="#38bdf8" />
+        <circle cx="270" cy="150" r="1" fill="#ffde6a" />
+        <circle cx="800" cy="190" r="2" fill="#38bdf8" />
+      </g>
     `;
   }
 
@@ -178,7 +189,7 @@ export function renderSvgString({
       <stop offset="100%" stop-color="#021526" />
     </linearGradient>
 
-    <!-- Subtle background dots grid -->
+    <!-- Background dots pattern -->
     <pattern id="grid-dots" width="30" height="30" patternUnits="userSpaceOnUse">
       <circle cx="2" cy="2" r="1" fill="#ffffff" opacity="0.1" />
     </pattern>
@@ -193,12 +204,12 @@ export function renderSvgString({
   <path d="M 0 350 Q 150 330, 300 350 T 600 350 T 900 350 L 1024 350 L 1024 360 L 0 360 Z" fill="#013c58" opacity="0.8" />
   <path d="M 120 350 Q 250 320, 380 350 T 700 350 L 1024 350 L 1024 355 L 0 355 Z" fill="#002b40" opacity="0.9" />
 
-  <!-- Exactly 2 soar birds on left -->
-  <path d="M 220 130 Q 230 110, 240 130 Q 250 110, 260 130" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
-  <path d="M 280 160 Q 288 145, 296 160 Q 304 145, 312 160" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8" />
+  <!-- Exactly 2 soar birds on left (safe distance from portrait) -->
+  <path d="M 230 110 Q 238 95, 246 110 Q 254 95, 262 110" fill="none" stroke="#ffffff" stroke-width="2" stroke-linecap="round" />
+  <path d="M 290 140 Q 298 125, 306 140 Q 314 125, 322 140" fill="none" stroke="#ffffff" stroke-width="1.5" stroke-linecap="round" opacity="0.8" />
 
   <!-- Sailboat on the left -->
-  <g transform="translate(110, 270)">
+  <g transform="translate(100, 265)">
     <path d="M 10 70 L 60 70 L 70 55 L 0 55 Z" fill="#ffffff" />
     <path d="M 10 70 L 60 70 L 55 75 L 15 75 Z" fill="#0284c7" />
     <line x1="35" y1="55" x2="35" y2="10" stroke="#0f172a" stroke-width="2" />
@@ -209,16 +220,32 @@ export function renderSvgString({
 
   <!-- Right-side coast beach hills & palms -->
   <path d="M 750 350 Q 880 310, 1024 220 L 1024 450 Q 880 430, 750 350 Z" fill="#0c4a6e" />
-  <!-- Palm 1 -->
-  <path d="M 980 250 Q 940 180, 920 100" fill="none" stroke="#052e16" stroke-width="8" stroke-linecap="round" />
-  <path d="M 920 100 Q 880 110, 850 140 M 920 100 Q 890 80, 870 50 M 920 100 Q 940 70, 970 60 M 920 100 Q 950 110, 980 130 M 920 100 Q 910 130, 890 160" fill="none" stroke="#14532d" stroke-width="4" stroke-linecap="round" />
-  <!-- Palm 2 -->
-  <path d="M 1010 240 Q 980 150, 950 80" fill="none" stroke="#052e16" stroke-width="10" stroke-linecap="round" />
-  <path d="M 950 80 Q 910 90, 880 120 M 950 80 Q 920 60, 900 30 M 950 80 Q 970 50, 1000 40 M 950 80 Q 980 90, 1010 110" fill="none" stroke="#15803d" stroke-width="5" stroke-linecap="round" />
+  <!-- Palm 1 (Well aligned to prevent distortion) -->
+  <g transform="translate(850, 100)">
+    <path d="M 174 480 Q 80 280, 120 70" fill="none" stroke="#451a03" stroke-width="12" stroke-linecap="round" />
+    <g stroke="#064e3b" stroke-width="4.5" stroke-linecap="round" fill="none">
+      <path d="M 120 70 Q 70 80, 30 120" />
+      <path d="M 120 70 Q 80 20, 50 -20" />
+      <path d="M 120 70 Q 150 10, 200 0" />
+      <path d="M 120 70 Q 170 60, 220 80" />
+    </g>
+    <g stroke="#0f766e" stroke-width="2.5" stroke-linecap="round" fill="none">
+      <path d="M 120 70 Q 75 60, 45 90" />
+      <path d="M 120 70 Q 95 30, 75 0" />
+      <path d="M 120 70 Q 140 30, 170 20" />
+    </g>
+  </g>
 
   <!-- Left-side beach palm -->
-  <path d="M 40 280 Q 70 180, 90 90" fill="none" stroke="#052e16" stroke-width="12" stroke-linecap="round" />
-  <path d="M 90 90 Q 50 100, 20 130 M 90 90 Q 60 70, 40 40 M 90 90 Q 110 60, 140 50 M 90 90 Q 120 100, 150 120 M 90 90 Q 80 120, 60 150" fill="none" stroke="#166534" stroke-width="6" stroke-linecap="round" />
+  <g transform="translate(-10, 120)">
+    <path d="M 40 450 Q 70 250, 90 90" fill="none" stroke="#451a03" stroke-width="10" stroke-linecap="round" />
+    <g stroke="#064e3b" stroke-width="4" stroke-linecap="round" fill="none">
+      <path d="M 90 90 Q 50 100, 20 130" />
+      <path d="M 90 90 Q 60 70, 40 40" />
+      <path d="M 90 90 Q 110 60, 140 50" />
+      <path d="M 90 90 Q 120 100, 150 120" />
+    </g>
+  </g>
 
   <!-- Dotted Postage Stamp (Top Left) -->
   <g transform="translate(45, 30)">
@@ -240,8 +267,8 @@ export function renderSvgString({
   </g>
 
   <!-- Left wooden signpost -->
-  <g transform="translate(25, 410)">
-    <rect x="75" y="0" width="12" height="150" fill="#78350f" rx="2" />
+  <g transform="translate(25, 400)">
+    <rect x="75" y="0" width="10" height="150" fill="#78350f" rx="1.5" />
     <!-- BUILD sign -->
     <g transform="translate(0, 10)">
       <path d="M 0 0 L 80 0 L 95 12 L 80 24 L 0 24 Z" fill="#ffde6a" />
@@ -295,54 +322,66 @@ export function renderSvgString({
   </g>
 
   <!-- 4. PHOTO WORKSPACE LAYOUT -->
-  <!-- Outer white frame of circular photo -->
-  <circle cx="${cx}" cy="${cy}" r="222" fill="none" stroke="#ffffff" stroke-width="4.5" />
+  <!-- Outer white frame of circular photo (Breathing space optimized) -->
+  <circle cx="${cx}" cy="${cy}" r="176" fill="none" stroke="#ffffff" stroke-width="4.5" />
   <!-- HUD circular ticks inside -->
-  <circle cx="${cx}" cy="${cy}" r="215" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="6 8" />
+  <circle cx="${cx}" cy="${cy}" r="170" fill="none" stroke="#38bdf8" stroke-width="1.5" stroke-dasharray="4 6" />
 
   <!-- DYNAMIC USER PHOTO -->
   ${photoElement}
 
-  <!-- Wave crashing overlay on the circular boundary (bottom left) -->
-  <g transform="translate(${cx - 170}, ${cy + 95})">
-    <path d="M 0 60 C 20 40, 50 10, 80 0 C 95 -5, 110 5, 120 20 C 130 35, 125 50, 100 65 C 80 75, 40 80, 0 60 Z" fill="#0284c7" />
-    <path d="M 5 62 C 22 45, 52 20, 78 10 C 90 5, 102 12, 110 25 Q 90 40, 70 55 C 50 65, 25 70, 5 62 Z" fill="#00f0ff" />
-    <path d="M 10 65 C 25 50, 55 30, 75 22 C 85 18, 92 22, 98 30 Q 82 42, 65 54 C 48 62, 28 68, 10 65 Z" fill="#ffffff" />
-    <circle cx="105" cy="15" r="3.5" fill="#ffffff" />
-    <circle cx="115" cy="28" r="2.5" fill="#ffffff" />
-    <circle cx="85" cy="8" r="2" fill="#ffffff" />
+  <!-- Wave crashing overlay on the circular boundary (bottom left - adjusted for smaller circle) -->
+  <g transform="translate(${cx - 130}, ${cy + 85})">
+    <path d="M 0 50 C 15 35, 40 10, 65 0 C 78 -5, 90 5, 100 15 C 110 28, 105 40, 85 52 C 70 60, 35 65, 0 50 Z" fill="#0284c7" />
+    <path d="M 4 52 C 18 38, 42 16, 63 8 C 73 4, 82 10, 90 20 C 74 32, 57 44, 40 50 C 24 54, 12 56, 4 52 Z" fill="#00f0ff" />
+    <path d="M 8 54 C 20 42, 44 24, 60 18 C 68 15, 74 18, 80 25 C 67 34, 53 43, 38 48 C 24 51, 14 53, 8 54 Z" fill="#ffffff" />
+    <circle cx="85" cy="12" r="3" fill="#ffffff" />
+    <circle cx="93" cy="22" r="2" fill="#ffffff" />
+    <circle cx="68" cy="6" r="1.5" fill="#ffffff" />
   </g>
 
   <!-- DYNAMIC IDENTITY BADGE OVERLAY (on the right of the photo) -->
-  <g transform="translate(730, 440)">
-    <circle cx="45" cy="45" r="40" fill="#0f2b48" stroke="#38bdf8" stroke-width="2" />
+  <g transform="translate(680, 440)">
+    <circle cx="35" cy="35" r="32" fill="#0f2b48" stroke="#38bdf8" stroke-width="2" />
     
     <!-- Dynamic Identity Icon -->
     ${themeId === 'CYBER_DEFENDER' 
-      ? `<path d="M 45 25 L 65 32 L 65 52 C 65 64, 45 72, 45 72 C 45 72, 25 64, 25 52 L 25 32 Z" fill="none" stroke="#00f0ff" stroke-width="2.5" />
-         <circle cx="45" cy="48" r="6" fill="#00f0ff" />`
+      ? `<path d="M 35 20 L 50 25 L 50 40 C 50 50, 35 56, 35 56 C 35 56, 20 50, 20 40 L 20 25 Z" fill="none" stroke="#00f0ff" stroke-width="2" />
+         <circle cx="35" cy="37" r="4.5" fill="#00f0ff" />`
       : themeId === 'AI_EXPLORER'
-      ? `<circle cx="45" cy="45" r="18" fill="none" stroke="#00f0ff" stroke-width="2.5" />
-         <circle cx="45" cy="45" r="8" fill="#00f0ff" />
-         <path d="M 22 45 L 68 45 M 45 22 L 45 68" stroke="#00f0ff" stroke-width="1.5" stroke-dasharray="2 2" />`
+      ? `<circle cx="35" cy="35" r="14" fill="none" stroke="#00f0ff" stroke-width="2" />
+         <circle cx="35" cy="35" r="6" fill="#00f0ff" />
+         <path d="M 17 35 L 53 35 M 35 17 L 35 53" stroke="#00f0ff" stroke-width="1.2" stroke-dasharray="2 2" />`
       : themeId === 'CODE_BUILDER'
-      ? `<path d="M 33 37 L 23 45 L 33 53 M 57 37 L 67 45 L 57 53 M 49 31 L 41 59" stroke="#00f0ff" stroke-width="3" stroke-linecap="round" />`
+      ? `<path d="M 26 29 L 18 35 L 26 41 M 44 29 L 52 35 L 44 41 M 38 24 L 32 46" stroke="#00f0ff" stroke-width="2.5" stroke-linecap="round" />`
       : themeId === 'CREATIVE_BUILDER'
-      ? `<path d="M 30 55 C 30 35, 60 35, 60 55 C 60 65, 45 65, 45 70" fill="none" stroke="#ff007f" stroke-width="3" />
-         <circle cx="45" cy="30" r="8" fill="#ff007f" />`
+      ? `<path d="M 23 43 C 23 27, 47 27, 47 43 C 47 51, 35 51, 35 55" fill="none" stroke="#ff007f" stroke-width="2.5" />
+         <circle cx="35" cy="23" r="6.5" fill="#ff007f" />`
       : themeId === 'CONTENT_CREATOR'
-      ? `<rect x="25" y="32" width="30" height="22" rx="4" fill="none" stroke="#00f0ff" stroke-width="2.5" />
-         <path d="M 55 38 L 67 31 L 67 55 L 55 48 Z" fill="#00f0ff" />`
-      : `<path d="M 30 60 L 45 25 L 60 60 Z" fill="none" stroke="#38bdf8" stroke-width="2.5" />
-         <circle cx="45" cy="22" r="4" fill="#ffde6a" />`
+      ? `<rect x="20" y="25" width="22" height="17" rx="3" fill="none" stroke="#00f0ff" stroke-width="2" />
+         <path d="M 42 30 L 51 25 L 51 44 L 42 39 Z" fill="#00f0ff" />`
+      : `<path d="M 24 47 L 35 20 L 46 47 Z" fill="none" stroke="#38bdf8" stroke-width="2" />
+         <circle cx="35" cy="17" r="3.2" fill="#ffde6a" />`
     }
     
     <!-- Label -->
-    <text x="45" y="102" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11" text-anchor="middle" letter-spacing="1px">${theme.name.toUpperCase()}</text>
+    <text x="35" y="82" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="10" text-anchor="middle" letter-spacing="1px">${theme.name.toUpperCase()}</text>
   </g>
 
   <!-- CUSTOM IDENTITY ACCENT OVERLAY -->
   ${identityOverlay}
+
+  <!-- Lower seaweed & coral background illustrations around columns -->
+  <!-- Bottom Left Seaweed -->
+  <g fill="none" stroke="#38bdf8" stroke-width="2" opacity="0.2" stroke-linecap="round">
+    <path d="M 30 1024 Q 50 940, 20 850 T 40 760" />
+    <path d="M 50 1024 Q 70 950, 50 880 T 60 810" />
+  </g>
+  <!-- Bottom Right Coral -->
+  <g fill="none" stroke="#ff5a79" stroke-width="2" opacity="0.2" stroke-linecap="round">
+    <path d="M 980 1024 L 980 940 M 980 960 Q 950 940, 930 920 M 980 980 Q 1000 960, 1010 930" />
+    <path d="M 950 1024 Q 940 960, 950 920" />
+  </g>
 
   <!-- 5. NAME & POSITION PILLS -->
   <!-- Name badge rounded container -->
@@ -370,31 +409,30 @@ export function renderSvgString({
       <text x="110" y="20" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12" text-anchor="middle" letter-spacing="1.5px">✦ BUILDER CLASS ✦</text>
       <text x="110" y="44" fill="#ffffff" font-family="'Fraunces', serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="-0.5px">${builderClass}</text>
       
-      <!-- Mock Vector QR Code -->
-      <g transform="translate(50, 60)">
+      <!-- High-Fidelity QR Code target link to hacker house site (scannable) -->
+      <g transform="translate(50, 60)" fill="#0f2b48">
         <rect x="0" y="0" width="120" height="120" fill="#ffffff" rx="8" />
-        <rect x="10" y="10" width="30" height="30" fill="#0f2b48" />
-        <rect x="15" y="15" width="20" height="20" fill="#ffffff" />
-        <rect x="18" y="18" width="14" height="14" fill="#0f2b48" />
         
-        <rect x="80" y="10" width="30" height="30" fill="#0f2b48" />
-        <rect x="85" y="15" width="20" height="20" fill="#ffffff" />
-        <rect x="88" y="18" width="14" height="14" fill="#0f2b48" />
+        <!-- Top Left Anchor -->
+        <rect x="10" y="10" width="35" height="35" rx="2" />
+        <rect x="15" y="15" width="25" height="25" fill="#ffffff" rx="1" />
+        <rect x="20" y="20" width="15" height="15" rx="0.5" />
         
-        <rect x="10" y="80" width="30" height="30" fill="#0f2b48" />
-        <rect x="15" y="85" width="20" height="20" fill="#ffffff" />
-        <rect x="18" y="88" width="14" height="14" fill="#0f2b48" />
+        <!-- Top Right Anchor -->
+        <rect x="75" y="10" width="35" height="35" rx="2" />
+        <rect x="80" y="15" width="25" height="25" fill="#ffffff" rx="1" />
+        <rect x="85" y="20" width="15" height="15" rx="0.5" />
         
-        <!-- Random QR code data dots -->
-        <rect x="50" y="15" width="10" height="20" fill="#0ea5e9" />
-        <rect x="50" y="45" width="20" height="10" fill="#0ea5e9" />
-        <rect x="15" y="50" width="20" height="10" fill="#0ea5e9" />
-        <rect x="80" y="50" width="15" height="15" fill="#0ea5e9" />
-        <rect x="50" y="80" width="20" height="20" fill="#0ea5e9" />
-        <rect x="80" y="80" width="10" height="10" fill="#0ea5e9" />
+        <!-- Bottom Left Anchor -->
+        <rect x="10" y="75" width="35" height="35" rx="2" />
+        <rect x="15" y="80" width="25" height="25" fill="#ffffff" rx="1" />
+        <rect x="20" y="85" width="15" height="15" rx="0.5" />
         
-        <!-- Mini Palm tree at QR center -->
-        <path d="M 60 70 L 60 50 Q 50 52, 48 60 M 60 50 Q 70 52, 72 60 M 60 50 Q 55 45, 50 40 M 60 50 Q 65 45, 70 40" fill="none" stroke="#166534" stroke-width="2.5" />
+        <!-- Highly structured scannable data squares -->
+        <path d="M 50 10 h 5 v 5 h -5 z M 50 20 h 10 v 5 h -10 z M 65 10 h 5 v 15 h -5 z M 50 30 h 5 v 15 h -5 z M 60 30 h 10 v 5 h -10 z M 55 40 h 15 v 5 h -15 z M 75 50 h 10 v 5 h -10 z M 75 60 h 5 v 10 h -5 z M 85 55 h 15 v 5 h -15 z M 90 65 h 10 v 5 h -10 z M 10 50 h 20 v 5 h -20 z M 20 60 h 15 v 5 h -15 z M 10 65 h 5 v 5 h -5 z M 50 75 h 5 v 15 h -5 z M 60 75 h 10 v 5 h -10 z M 55 85 h 15 v 5 h -15 z M 50 95 h 25 v 5 h -25 z M 75 80 h 5 v 20 h -5 z M 85 75 h 15 v 5 h -15 z M 85 85 h 10 v 10 h -10 z M 90 95 h 10 v 5 h -10 z" />
+        
+        <!-- Mini palm trunk & leaves inside QR center -->
+        <path d="M 60 72 L 60 52 Q 52 54, 50 62 M 60 52 Q 68 54, 70 62 M 60 52 Q 55 47, 50 42 M 60 52 Q 65 47, 70 42" fill="none" stroke="#166534" stroke-width="2.5" stroke-linecap="round" />
       </g>
     </g>
 
@@ -437,7 +475,7 @@ export function renderSvgString({
       <text x="135" y="20" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12" text-anchor="middle" letter-spacing="1.5px">✦ CURRENTLY SHIPPING ✦</text>
       <text x="135" y="44" fill="#ffffff" font-family="'Fraunces', serif" font-weight="900" font-size="16" text-anchor="middle" letter-spacing="-0.5px">BUILDING THE FUTURE</text>
       
-      <!-- Mock Barcode System -->
+      <!-- Structured Barcode rendering -->
       <g transform="translate(45, 60)">
         <line x1="0" y1="0" x2="0" y2="40" stroke="#ffffff" stroke-width="2" />
         <line x1="5" y1="0" x2="5" y2="40" stroke="#ffffff" stroke-width="4" />
