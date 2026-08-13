@@ -91,39 +91,17 @@ export const GenerateStep: React.FC<GenerateStepProps> = ({
       <div className="generate-status-card">
         {status === 'rendering' && (
           <div className="status-indicator">
-            <div className="generate-wave-wrapper">
-              <svg className="generate-wave-svg" viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
-                <defs>
-                  <path id="gentle-wave-loader" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-                </defs>
-                <g className="parallax-loader">
-                  <use href="#gentle-wave-loader" x="48" y="0" fill="rgba(255, 222, 106, 0.2)" />
-                  <use href="#gentle-wave-loader" x="48" y="3" fill="rgba(56, 189, 248, 0.4)" />
-                  <use href="#gentle-wave-loader" x="48" y="5" fill="var(--color-yellow)" />
-                </g>
-              </svg>
-            </div>
-            <h2 className="status-title">GENERATING FRAME</h2>
+            <Loader2 className="processing-spinner animate-spin" size={48} />
+            <h2 className="status-title">GENERATING FRAME...</h2>
             <p className="status-subtitle">Rasterizing SVG layout and custom typography into high-res PNG...</p>
           </div>
         )}
 
         {status === 'uploading' && (
           <div className="status-indicator">
-            <div className="generate-wave-wrapper">
-              <svg className="generate-wave-svg" viewBox="0 24 150 28" preserveAspectRatio="none" shapeRendering="auto">
-                <defs>
-                  <path id="gentle-wave-loader" d="M-160 44c30 0 58-18 88-18s58 18 88 18 58-18 88-18 58 18 88 18 v44h-352z" />
-                </defs>
-                <g className="parallax-loader">
-                  <use href="#gentle-wave-loader" x="48" y="0" fill="rgba(255, 222, 106, 0.2)" />
-                  <use href="#gentle-wave-loader" x="48" y="3" fill="rgba(56, 189, 248, 0.4)" />
-                  <use href="#gentle-wave-loader" x="48" y="5" fill="var(--color-yellow)" />
-                </g>
-              </svg>
-            </div>
-            <h2 className="status-title">COMPILING SHARABLE PATH</h2>
-            <p className="status-subtitle">Syncing frames with the official Hacker House Goa index...</p>
+            <Loader2 className="processing-spinner animate-spin" size={48} />
+            <h2 className="status-title">COMPILING SHARABLE PATH...</h2>
+            <p className="status-subtitle">Syncing frames with the official HH Goa index...</p>
           </div>
         )}
 
