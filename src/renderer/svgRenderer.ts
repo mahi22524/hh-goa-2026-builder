@@ -215,7 +215,7 @@ export function renderSvgString({
     <!-- Fonts inclusion -->
     <style>
       ${embedFontsCss || `
-        @import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&amp;family=Fraunces:ital,opsz,wght@0,9..144,100..900;1,9..144,100..900&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap');
+        @import url('https://fonts.googleapis.com/css2?family=Anton&amp;family=Pacifico&amp;family=Space+Grotesk:wght@300..700&amp;family=JetBrains+Mono:wght@100..800&amp;display=swap');
       `}
       
       svg {
@@ -304,11 +304,17 @@ export function renderSvgString({
     <path d="M 35 10 L 45 13 L 35 16 Z" fill="#ffde6a" />
   </g>
 
-  <!-- Right-side coast beach hills & palms (Naturally detailed vector palms) -->
-  <path d="M 750 350 Q 880 310, 1024 220 L 1024 450 Q 880 430, 750 350 Z" fill="#0c4a6e" />
+  <!-- Right-side coast beach hills, rocks, and shoreline coves -->
+  <path d="M 720 350 C 800 340, 870 380, 920 420 S 970 470, 1024 490 L 1024 1024 L 720 1024 Z" fill="#ebd8bf" />
+  <path d="M 700 360 C 780 350, 850 390, 900 430 S 950 480, 1000 500 L 1024 510 L 1024 1024 L 700 1024 Z" fill="#dfcbb5" />
+  <path d="M 680 370 C 760 360, 830 400, 880 440 S 930 490, 980 510 L 990 515 L 680 370 Z" fill="#ffffff" opacity="0.6" stroke="#ffffff" stroke-width="1.5" />
+  <path d="M 850 420 Q 870 390, 890 410 Q 910 430, 890 440 Q 870 450, 850 420 Z" fill="#334155" stroke="#1e293b" stroke-width="1.5" />
+  <path d="M 920 480 Q 945 450, 960 470 Q 975 490, 955 510 Q 935 520, 920 480 Z" fill="#475569" stroke="#1e293b" stroke-width="1.5" />
+
   <!-- Palm 1 (aligned and structured, not distorted) -->
   <g transform="translate(850, 100)">
-    <path d="M 174 480 Q 80 280, 120 70" fill="none" stroke="#451a03" stroke-width="12" stroke-linecap="round" />
+    <path d="M 174 480 Q 80 280, 120 70" fill="none" stroke="#78350f" stroke-width="12" stroke-linecap="round" />
+    <path d="M 150 350 Q 130 340, 135 330 M 130 280 Q 115 270, 120 260 M 110 210 Q 100 200, 105 190" stroke="#451a03" stroke-width="2" />
     <g stroke="#064e3b" stroke-width="5" stroke-linecap="round" fill="none">
       <path d="M 120 70 Q 70 80, 30 120" />
       <path d="M 120 70 Q 80 20, 50 -20" />
@@ -324,7 +330,7 @@ export function renderSvgString({
 
   <!-- Left-side beach palm -->
   <g transform="translate(-10, 120)">
-    <path d="M 40 450 Q 70 250, 90 90" fill="none" stroke="#451a03" stroke-width="10" stroke-linecap="round" />
+    <path d="M 40 450 Q 70 250, 90 90" fill="none" stroke="#78350f" stroke-width="10" stroke-linecap="round" />
     <g stroke="#064e3b" stroke-width="4.5" stroke-linecap="round" fill="none">
       <path d="M 90 90 Q 50 100, 20 130" />
       <path d="M 90 90 Q 60 70, 40 40" />
@@ -333,9 +339,9 @@ export function renderSvgString({
     </g>
   </g>
 
-  <!-- Perforated Postage Stamp (Top Left) -->
-  <g transform="translate(45, 30)">
-    <rect x="0" y="0" width="110" height="110" fill="#ffffff" mask="url(#stamp-mask)" />
+  <!-- Perforated Postage Stamp Group (Top Left) -->
+  <g transform="translate(45, 30)" mask="url(#stamp-mask)">
+    <rect x="0" y="0" width="110" height="110" fill="#ffffff" />
     <rect x="5" y="5" width="100" height="100" fill="#0f2b48" rx="2" />
     <text x="15" y="25" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12">GOA</text>
     <text x="15" y="40" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="12">INDIA</text>
@@ -351,29 +357,35 @@ export function renderSvgString({
   <g transform="translate(865, 30)" opacity="0.9">
     <circle cx="50" cy="50" r="45" fill="none" stroke="#ffffff" stroke-width="1" stroke-dasharray="3 3" />
     <circle cx="50" cy="50" r="40" fill="none" stroke="#ffde6a" stroke-width="1.5" />
-    <!-- Palm tree in circular stamp center -->
+    <!-- Palm tree inside circular stamp center -->
     <path d="M 50 62 L 50 42" stroke="#ffde6a" stroke-width="2" />
     <path d="M 50 42 Q 40 42, 35 48 M 50 42 Q 60 42, 65 48 M 50 42 Q 45 35, 40 30 M 50 42 Q 55 35, 60 30" fill="none" stroke="#ffde6a" stroke-width="1.5" />
     <text x="50" y="27" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="7" text-anchor="middle">BUILD IN GOA</text>
     <text x="50" y="78" fill="#38bdf8" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="6.5" text-anchor="middle">SHIP FROM PARADISE</text>
   </g>
 
-  <!-- Left wooden signpost -->
+  <!-- Left wooden signpost with wood texture plank markings -->
   <g transform="translate(25, 400)">
     <rect x="75" y="0" width="10" height="150" fill="#78350f" rx="1.5" />
     <!-- BUILD sign -->
     <g transform="translate(0, 10)">
       <path d="M 0 0 L 80 0 L 95 12 L 80 24 L 0 24 Z" fill="#ffde6a" />
+      <line x1="5" y1="6" x2="75" y2="6" stroke="#d97706" stroke-width="1" opacity="0.5" />
+      <line x1="5" y1="18" x2="75" y2="18" stroke="#d97706" stroke-width="1" opacity="0.5" />
       <text x="40" y="17" fill="#0f2537" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11" text-anchor="middle">BUILD</text>
     </g>
     <!-- SHIP sign -->
     <g transform="translate(5, 45)">
       <path d="M 0 0 L 75 0 L 90 12 L 75 24 L 0 24 Z" fill="#0284c7" />
+      <line x1="5" y1="6" x2="70" y2="6" stroke="#0369a1" stroke-width="1" opacity="0.5" />
+      <line x1="5" y1="18" x2="70" y2="18" stroke="#0369a1" stroke-width="1" opacity="0.5" />
       <text x="38" y="17" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="11" text-anchor="middle">SHIP</text>
     </g>
     <!-- REPEAT sign -->
     <g transform="translate(0, 80)">
       <path d="M 0 0 L 80 0 L 95 12 L 80 24 L 0 24 Z" fill="#0ea5e9" />
+      <line x1="5" y1="6" x2="75" y2="6" stroke="#0284c7" stroke-width="1" opacity="0.5" />
+      <line x1="5" y1="18" x2="75" y2="18" stroke="#0284c7" stroke-width="1" opacity="0.5" />
       <text x="40" y="17" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="10" text-anchor="middle">REPEAT</text>
     </g>
   </g>
@@ -394,17 +406,17 @@ export function renderSvgString({
     <text x="0" y="78" fill="#ffde6a" font-family="'JetBrains Mono', monospace" font-size="10" text-anchor="middle">2026</text>
   </g>
 
-  <!-- Title Section with script Overlay (Sufficiently spaced to solve overlaps) -->
+  <!-- Title Section with script Overlay (Clustered tightly to match reference, no empty space gap) -->
   <g transform="translate(512, 135)">
-    <!-- Spaced middle-anchored header titles to eliminate overlaps -->
-    <text x="-195" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="46" text-anchor="middle" letter-spacing="-1px">HACKER</text>
-    <text x="195" y="0" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="900" font-size="46" text-anchor="middle" letter-spacing="-1px">HOUSE</text>
-    <text x="0" y="8" fill="#ffde6a" font-family="'Fraunces', serif" font-style="italic" font-weight="900" font-size="52" text-anchor="middle" filter="url(#shadow)">Goa</text>
+    <!-- Spaced middle-anchored header titles using 'Anton' and 'Pacifico' to replicate reference exactly -->
+    <text x="-125" y="0" fill="#ffffff" font-family="'Anton', sans-serif" font-weight="400" font-size="54" text-anchor="middle" letter-spacing="1px">HACKER</text>
+    <text x="125" y="0" fill="#ffffff" font-family="'Anton', sans-serif" font-weight="400" font-size="54" text-anchor="middle" letter-spacing="1px">HOUSE</text>
+    <text x="0" y="8" fill="#ffde6a" font-family="'Pacifico', cursive" font-weight="400" font-size="54" text-anchor="middle" filter="url(#shadow)">Goa</text>
     
     <!-- Under Title Year Pill -->
-    <rect x="-85" y="18" width="170" height="28" fill="#0f2b48" rx="14" stroke="#38bdf8" stroke-width="1.5" />
-    <text x="0" y="38" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="16" text-anchor="middle" letter-spacing="3px">2026</text>
-    <text x="0" y="65" fill="#bae6fd" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="10" text-anchor="middle" letter-spacing="4px">BUILD • INNOVATE • IMPACT</text>
+    <rect x="-85" y="24" width="170" height="28" fill="#0f2b48" rx="14" stroke="#38bdf8" stroke-width="1.5" />
+    <text x="0" y="44" fill="#ffffff" font-family="'Space Grotesk', sans-serif" font-weight="800" font-size="16" text-anchor="middle" letter-spacing="3px">2026</text>
+    <text x="0" y="70" fill="#bae6fd" font-family="'JetBrains Mono', monospace" font-weight="700" font-size="10" text-anchor="middle" letter-spacing="4px">BUILD • INNOVATE • IMPACT</text>
   </g>
 
   <!-- Left/Right margins metadata -->
@@ -427,16 +439,22 @@ export function renderSvgString({
   <!-- DYNAMIC USER PHOTO -->
   ${photoElement}
 
-  <!-- Beautiful, high-fidelity crashing wave overlay at bottom-left boundary -->
-  <g transform="translate(${cx - 150}, ${cy + 70})">
-    <path d="M 10 90 Q 50 60, 70 20 T 110 -10 Q 120 5, 115 25 Q 95 65, 30 85 Z" fill="#025985" />
-    <path d="M 15 90 Q 52 65, 72 30 T 106 5 Q 112 18, 100 45 Q 85 70, 35 88 Z" fill="#00f0ff" />
-    <path d="M 20 90 Q 55 70, 75 40 T 100 20 C 105 25, 95 40, 85 55 Q 70 75, 40 90 Z" fill="#ffffff" />
-    <circle cx="108" cy="-5" r="4" fill="#ffffff" />
-    <circle cx="120" cy="8" r="3" fill="#ffffff" />
-    <circle cx="95" cy="-8" r="3.5" fill="#ffffff" />
-    <circle cx="80" cy="-12" r="2.5" fill="#ffffff" />
-    <circle cx="65" cy="5" r="2" fill="#ffffff" />
+  <!-- Beautiful, high-fidelity crashing wave overlay at bottom-left boundary (matching reference poster wave) -->
+  <g transform="translate(${cx - 170}, ${cy + 60})">
+    <!-- Shadow backing -->
+    <path d="M 0 120 C 30 110, 70 80, 95 40 Q 110 10, 125 15 C 135 25, 120 50, 105 75 C 80 110, 40 125, 0 120 Z" fill="#013c58" opacity="0.6" />
+    <!-- Wave blue body -->
+    <path d="M 5 120 C 35 110, 70 80, 90 40 Q 105 10, 120 15 C 130 25, 115 50, 100 75 C 75 110, 38 123, 5 120 Z" fill="#01507d" />
+    <!-- Wave cyan highlight layer -->
+    <path d="M 10 120 C 38 110, 70 80, 85 45 Q 100 15, 112 20 C 122 28, 110 50, 95 75 C 70 110, 35 122, 10 120 Z" fill="#00f0ff" />
+    <!-- Wave white foam cap -->
+    <path d="M 15 120 C 40 110, 70 80, 80 50 Q 92 20, 102 24 C 112 30, 102 50, 90 75 C 68 110, 32 121, 15 120 Z" fill="#ffffff" />
+    <!-- Splatters -->
+    <circle cx="102" cy="12" r="4.5" fill="#ffffff" />
+    <circle cx="118" cy="22" r="3.5" fill="#ffffff" />
+    <circle cx="125" cy="40" r="2.5" fill="#ffffff" />
+    <circle cx="90" cy="5" r="3" fill="#ffffff" />
+    <circle cx="78" cy="0" r="2" fill="#ffffff" />
   </g>
 
   <!-- DYNAMIC IDENTITY BADGE OVERLAY (on the right of the photo) -->
